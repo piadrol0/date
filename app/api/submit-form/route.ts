@@ -16,6 +16,19 @@ export async function POST(req: Request) {
 
     const { emailSubject } = data;
 
+    // const response = await fetch(
+    //   "https://piadrol2356.app.n8n.cloud/webhook/submit-form",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       subject: emailSubject || "Date request payload",
+    //       body: loggedBody,
+    //     }),
+    //   },
+    // );
     const response = await fetch(
       "https://piadrol2356.app.n8n.cloud/webhook/submit-form",
       {
@@ -24,8 +37,8 @@ export async function POST(req: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          subject: emailSubject || "Date request payload",
-          body: loggedBody,
+          test: "HELLO_FROM_NEXTJS",
+          time: new Date().toISOString(),
         }),
       },
     );
