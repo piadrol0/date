@@ -63,8 +63,7 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
 
-    console.log("========== REQUEST FROM WEBSITE ==========");
-    console.log(JSON.stringify(data, null, 2));
+    console.log("REQUEST DATA:", data);
 
     const response = await fetch(
       "https://piadrol2356.app.n8n.cloud/webhook/submit-form",
@@ -73,31 +72,27 @@ export async function POST(req: Request) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          test: "HELLO_FROM_NEXTJS",
-          timestamp: new Date().toISOString(),
-        }),
+        body: JSON.stringify(data),
       },
     );
 
     const responseText = await response.text();
 
-    console.log("========== N8N RESPONSE ==========");
-    console.log(responseText);
+    console.log("N8N RESPONSE:", responseText);
 
-    return Response.json({
-      success: true,
-      n8nResponse: responseText,
-    });
+    if (!response.ok) {
+      return Response.json(
+        { success: false, message: "n8n failed" },
+        { status: 502 },
+      );
+    }
+
+    return Response.json({ success: true });
   } catch (error) {
-    console.error("========== ERROR ==========");
     console.error(error);
 
     return Response.json(
-      {
-        success: false,
-        message: "Server error",
-      },
+      { success: false, message: "Server error" },
       { status: 500 },
     );
   }
