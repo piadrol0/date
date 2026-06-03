@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Heart, Calendar, Clock, Sparkles, PartyPopper } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -61,6 +61,7 @@ const persianMonths = [
 
 export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
   const [isGradientLoaded, setIsGradientLoaded] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
 
   const formatDate = (date: Date) => {
     const [jy, jm, jd] = gregorianToJalali(
@@ -73,6 +74,47 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
   }
 
   const activity = activityLabels[details.activity]
+
+  useEffect(() => {
+    const submitDetails = async () => {
+      setSubmitStatus("sending")
+
+      try {
+        const formattedDate = formatDate(details.date)
+        const formattedTime = timeLabels[details.time] || details.time
+        const formattedActivity = activity?.label || details.activity
+
+        const response = await fetch("/api/submit-form", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            date: details.date.toISOString(),
+            formattedDate,
+            time: details.time,
+            formattedTime,
+            activity: details.activity,
+            formattedActivity,
+            activityIcon: activity?.icon || "",
+            emailContent: `تاریخ: ${formattedDate}\nساعت: ${formattedTime}\nفعالیت: ${formattedActivity}`,
+          }),
+        })
+
+        if (response.ok) {
+          setSubmitStatus("success")
+        } else {
+          setSubmitStatus("error")
+          console.error("submit-form failed", await response.text())
+        }
+      } catch (error) {
+        console.error("submit-form error", error)
+        setSubmitStatus("error")
+      }
+    }
+
+    submitDetails()
+  }, [details])
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-8">
@@ -173,7 +215,11 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
             </div>
           </div>
 
-
+          <div className="rounded-xl bg-secondary/50 p-4 text-center text-sm text-muted-foreground">
+            {submitStatus === "sending" && "در حال ارسال اطلاعات به ایمیل..."}
+            {submitStatus === "success" && "اطلاعات با موفقیت ارسال شد."}
+            {submitStatus === "error" && "ارسال اطلاعات به ایمیل ناموفق بود. لطفا دوباره امتحان کنید."}
+          </div>
 
           <Button
             asChild
