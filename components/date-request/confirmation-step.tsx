@@ -44,6 +44,16 @@ const timeLabels: Record<string, string> = {
   "22:00": "۲۲:۰۰ شب",
 }
 
+const dayLabels = [
+  "یکشنبه",
+  "دوشنبه",
+  "سه‌شنبه",
+  "چهارشنبه",
+  "پنج‌شنبه",
+  "جمعه",
+  "شنبه",
+]
+
 const persianMonths = [
   "فروردین",
   "اردیبهشت",
@@ -73,6 +83,8 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
     return `${jd} ${month}`
   }
 
+  const getDayLabel = (date: Date) => dayLabels[date.getDay()]
+
   const activity = activityLabels[details.activity]
 
   useEffect(() => {
@@ -81,8 +93,11 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
 
       try {
         const formattedDate = formatDate(details.date)
+        const formattedDay = getDayLabel(details.date)
         const formattedTime = timeLabels[details.time] || details.time
         const formattedActivity = activity?.label || details.activity
+
+        const emailBody = `تاریخ: ${formattedDate}\nروز: ${formattedDay}\nساعت: ${formattedTime}\nفعالیت: ${formattedActivity}`
 
         const response = await fetch("/api/submit-form", {
           method: "POST",
@@ -90,14 +105,17 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            submissionType: "date-request",
+            emailSubject: `قرار ${formattedDate} - ${formattedTime}`,
+            emailText: emailBody,
             date: details.date.toISOString(),
             formattedDate,
+            day: formattedDay,
             time: details.time,
             formattedTime,
             activity: details.activity,
             formattedActivity,
             activityIcon: activity?.icon || "",
-            emailContent: `تاریخ: ${formattedDate}\nساعت: ${formattedTime}\nفعالیت: ${formattedActivity}`,
           }),
         })
 

@@ -1,7 +1,20 @@
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    console.log("submit-form body:", data);
+    console.log("========== REQUEST DATA ==========");
+    console.log(data);
+    console.log("==================================");
+    const loggedBody = `submit-form body:\n${JSON.stringify(data, null, 2)}`;
+    console.log(loggedBody);
+
+    if (
+      typeof data?.data === "string" &&
+      data.data.trim().startsWith("<!DOCTYPE")
+    ) {
+      console.warn("submit-form ignored HTML data field from request body");
+    }
+
+    const { emailSubject } = data;
 
     const response = await fetch(
       "https://piadrol2356.app.n8n.cloud/webhook/submit-form",
@@ -11,17 +24,16 @@ export async function POST(req: Request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...data,
-          timestamp: new Date().toISOString(),
-          source: "date-planner-app",
+          subject: emailSubject || "Date request payload",
+          body: loggedBody,
         }),
       },
     );
 
-    const text = await response.text();
+    const responseText = await response.text();
 
     if (!response.ok) {
-      console.error("n8n error:", text);
+      console.error("n8n error:", responseText);
 
       return Response.json(
         {
