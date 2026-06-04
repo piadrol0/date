@@ -9,11 +9,13 @@ import SplitText from "@/components/SplitText"
 
 interface InvitationStepProps {
   onAccept: () => void
+  onReject: () => void
 }
 
-export function InvitationStep({ onAccept }: InvitationStepProps) {
+export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
   const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 })
   const [hoverCount, setHoverCount] = useState(0)
+  const [attemptCount, setAttemptCount] = useState(0)
   const [isGradientLoaded, setIsGradientLoaded] = useState(false)
   const [animationKey, setAnimationKey] = useState(0)
 
@@ -56,7 +58,14 @@ export function InvitationStep({ onAccept }: InvitationStepProps) {
 
     setNoButtonPosition({ x: newX, y: newY })
     setHoverCount((prev) => Math.min(prev + 1, messages.length - 1))
-  }, [messages.length])
+    setAttemptCount((prev) => {
+      const nextCount = prev + 1
+      if (nextCount >= 2) {
+        onReject()
+      }
+      return nextCount
+    })
+  }, [messages.length, onReject])
 
   return (
     <div
@@ -157,6 +166,15 @@ export function InvitationStep({ onAccept }: InvitationStepProps) {
             }}
             onMouseEnter={moveButton}
             onTouchStart={moveButton}
+            onClick={() => {
+              setAttemptCount((prev) => {
+                const nextCount = prev + 1
+                if (nextCount >= 2) {
+                  onReject()
+                }
+                return nextCount
+              })
+            }}
           >
             NO
           </Button>

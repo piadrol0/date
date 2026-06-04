@@ -6,8 +6,9 @@ import { CalendarStep } from "./calendar-step"
 import { TimeStep } from "./time-step"
 import { ActivityStep } from "./activity-step"
 import { ConfirmationStep } from "./confirmation-step"
+import { ImageSequenceStep } from "./image-sequence-step"
 
-type Step = "invitation" | "calendar" | "time" | "activity" | "confirmation"
+type Step = "invitation" | "imageSequence" | "calendar" | "time" | "activity" | "confirmation"
 
 interface DateDetails {
   date: Date | null
@@ -41,6 +42,15 @@ export function DateRequestFlow() {
 
   const handleAcceptInvitation = () => {
     setCurrentStep("calendar")
+  }
+
+  const handleRejectInvitation = () => {
+    setCurrentStep("imageSequence")
+  }
+
+  const handleSequenceComplete = () => {
+    setDateDetails({ date: null, time: null, activity: null })
+    setCurrentStep("invitation")
   }
 
   const handleSelectDate = (date: Date) => {
@@ -81,7 +91,10 @@ export function DateRequestFlow() {
   return (
     <main className="min-h-screen bg-background">
       {currentStep === "invitation" && (
-        <InvitationStep onAccept={handleAcceptInvitation} />
+        <InvitationStep onAccept={handleAcceptInvitation} onReject={handleRejectInvitation} />
+      )}
+      {currentStep === "imageSequence" && (
+        <ImageSequenceStep onFinish={handleSequenceComplete} />
       )}
       {currentStep === "calendar" && (
         <CalendarStep
