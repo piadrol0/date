@@ -103,7 +103,7 @@ export function ImageSequenceStep({ onFinish }: ImageSequenceStepProps) {
                         grabCursor
                         slidesPerView={1}
                         spaceBetween={24}
-                        className="rounded-4xl overflow-hidden w-125"
+                        className="rounded-4xl overflow-hidden w-full mx-auto"
 
                     >
                         {images.map((image) => (
@@ -111,12 +111,12 @@ export function ImageSequenceStep({ onFinish }: ImageSequenceStepProps) {
                                 <button
                                     type="button"
                                     onClick={handleImageClick}
-                                    className="group relative flex h-[60vh] min-h-80 w-full items-center justify-center overflow-hidden rounded-4xl bg-black"
+                                    className="group relative flex h-[55vh] sm:h-[60vh] md:h-[70vh] max-h-[85vh] min-h-80 w-full items-center justify-center overflow-hidden rounded-4xl bg-black"
                                 >
                                     <img
                                         src={image.src}
                                         alt={image.alt}
-                                        className="h-full w-full object-contain"
+                                        className="max-h-full max-w-full object-contain select-none"
                                     />
                                     <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/60 p-4 text-left text-white">
 
