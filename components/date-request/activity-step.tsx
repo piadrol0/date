@@ -13,7 +13,7 @@ interface ActivityStepProps {
 
 const activities = [
   { value: "restaurant", label: "رستوران", icon: "🍽️", description: "شام " },
-  { value: "cafe", label: "کافه", icon: "☕", description: "قهوه (بوا)" },
+  { value: "cafe", label: "کافه", icon: "☕", description: "قهوه" },
   { value: "park", label: "بام", icon: "🌳", description: "زعفرانیه/ولنجک" },
   { value: "museum", label: "موزه/گالری", icon: "🎨", description: "ژوژمااااان" },
   { value: "shopping", label: "مال", icon: "🛍️", description: "idk why" },

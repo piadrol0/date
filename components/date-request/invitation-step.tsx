@@ -5,6 +5,7 @@ import { Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import Grainient from "@/components/Grainient"
+import SplitText from "@/components/SplitText"
 
 interface InvitationStepProps {
   onAccept: () => void
@@ -14,12 +15,13 @@ export function InvitationStep({ onAccept }: InvitationStepProps) {
   const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 })
   const [hoverCount, setHoverCount] = useState(0)
   const [isGradientLoaded, setIsGradientLoaded] = useState(false)
+  const [animationKey, setAnimationKey] = useState(0)
 
   const containerRef = useRef<HTMLDivElement>(null)
   const noButtonRef = useRef<HTMLButtonElement>(null)
 
   const messages = [
-    "?Want to go on a date with me",
+    "Want to go on a date with me?",
     "الان مطمئنی؟ دیگه؟",
     "مطمئنی؟",
     "کاملا مطمئنی؟",
@@ -91,6 +93,8 @@ export function InvitationStep({ onAccept }: InvitationStepProps) {
         />
       </div>
 
+
+
       {/* Floating hearts background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden z-5">
         {hearts.map((heart) => (
@@ -116,15 +120,29 @@ export function InvitationStep({ onAccept }: InvitationStepProps) {
           {messages[hoverCount]}
         </h1>
 
-        <p className="max-w-md text-center text-white">
-          A simple question, but an important one ✨
-        </p>
+        <SplitText
+          key={animationKey}
+          text="A simple question, but an important one ✨"
+          className="max-w-md text-center text-white"
+          tag="p"
+          splitType="words"
+          from={{ opacity: 0, y: 40 }}
+          to={{ opacity: 1, y: 0 }}
+          ease="power3.out"
+          textAlign="center"
+          duration={0.8}
+          delay={50}
+          onLetterAnimationComplete={() => {
+            setTimeout(() => setAnimationKey(prev => prev + 1), 5000)
+          }}
+        />
+
 
         <div className="flex flex-col items-center gap-6 sm:flex-row">
           <Button
             onClick={onAccept}
             size="lg"
-            className="min-w-[140px] bg-primary text-lg text-primary-foreground shadow-lg transition-all hover:scale-105 hover:bg-primary/90 hover:shadow-xl"
+            className="min-w-35 bg-primary text-lg text-primary-foreground shadow-lg transition-all hover:scale-105 hover:bg-primary/90 hover:shadow-xl"
           >
             YES
           </Button>
@@ -133,7 +151,7 @@ export function InvitationStep({ onAccept }: InvitationStepProps) {
             ref={noButtonRef}
             variant="outline"
             size="lg"
-            className="min-w-[140px] border-2 border-border text-lg transition-all duration-300"
+            className="min-w-35 border-2 border-border text-lg transition-all duration-300"
             style={{
               transform: `translate(${noButtonPosition.x}px, ${noButtonPosition.y}px)`,
             }}

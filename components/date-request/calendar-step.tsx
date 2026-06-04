@@ -21,142 +21,104 @@ interface CalendarStepProps {
 }
 
 const persianMonths = [
-  "فروردین",
-  "اردیبهشت",
-  "خرداد",
-  "تیر",
-  "مرداد",
-  "شهریور",
-  "مهر",
-  "آبان",
-  "آذر",
-  "دی",
-  "بهمن",
-  "اسفند",
+  "فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور",
+  "مهر","آبان","آذر","دی","بهمن","اسفند",
 ]
 
 const persianDays = ["ش", "ی", "د", "س", "چ", "پ", "ج"]
 
-export function CalendarStep({ onSelect, onBack }: CalendarStepProps) {
+export function CalendarStep({ onSelect }: CalendarStepProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [showTooLateDialog, setShowTooLateDialog] = useState(false)
 
-  const today = new Date()
+  // 🧠 Tehran-safe today
+  const today = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "Asia/Tehran" })
+  )
   today.setHours(0, 0, 0, 0)
 
-  const [todayJalaliYear, todayJalaliMonth, todayJalaliDay] = gregorianToJalali(
+  const [todayJy, todayJm, todayJd] = gregorianToJalali(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate(),
+    today.getDate()
   )
 
-  const [currentJalaliYear, setCurrentJalaliYear] = useState(todayJalaliYear)
-  const [currentJalaliMonth, setCurrentJalaliMonth] = useState(todayJalaliMonth)
+  const [currentJy, setCurrentJy] = useState(todayJy)
+  const [currentJm, setCurrentJm] = useState(todayJm)
 
+  // ✅ only today → 19 allowed
   const isDateSelectable = (date: Date) => {
     const [jy, jm, jd] = gregorianToJalali(
       date.getFullYear(),
       date.getMonth(),
-      date.getDate(),
+      date.getDate()
     )
 
     return (
-      jy === todayJalaliYear &&
-      jm === todayJalaliMonth &&
-      jd >= 16 &&
+      jy === todayJy &&
+      jm === todayJm &&
+      jd >= todayJd &&
       jd <= 19
     )
   }
 
-  const getJalaliMonthLength = (jy: number, jm: number) => {
-    if (jm <= 6) return 31
-    if (jm <= 11) return 30
+  // ✅ month length
+  const getMonthLength = (m: number) =>
+    m <= 6 ? 31 : m <= 11 ? 30 : 29
 
-    const [gy, gm, gd] = jalaliToGregorian(jy, jm, 30)
-    const [jy2, jm2, jd2] = gregorianToJalali(gy, gm - 1, gd)
-
-    return jy2 === jy && jm2 === jm && jd2 === 30 ? 30 : 29
-  }
-
-  const getJalaliMonthStartWeekday = (jy: number, jm: number) => {
+  // ✅ correct weekday start
+  const getFirstWeekday = (jy: number, jm: number) => {
     const [gy, gm, gd] = jalaliToGregorian(jy, jm, 1)
-    const weekday = new Date(gy, gm - 1, gd).getDay()
-    return (weekday + 1) % 7
+    return (new Date(gy, gm - 1, gd).getDay() + 6) % 7
   }
 
-  const getDaysInJalaliMonth = (jy: number, jm: number) => {
-    const monthLength = getJalaliMonthLength(jy, jm)
-    const startingDay = getJalaliMonthStartWeekday(jy, jm)
-
-    const days: (number | null)[] = []
-    for (let i = 0; i < startingDay; i++) {
-      days.push(null)
-    }
-
-    for (let i = 1; i <= monthLength; i++) {
-      days.push(i)
-    }
-
-    return days
-  }
-
-  const handlePrevMonth = () => {
-    if (currentJalaliMonth === 1) {
-      setCurrentJalaliMonth(12)
-      setCurrentJalaliYear((year) => year - 1)
+  const handlePrev = () => {
+    if (currentJm === 1) {
+      setCurrentJm(12)
+      setCurrentJy(y => y - 1)
     } else {
-      setCurrentJalaliMonth((month) => month - 1)
+      setCurrentJm(m => m - 1)
     }
   }
 
-  const handleNextMonth = () => {
-    if (currentJalaliMonth === 12) {
-      setCurrentJalaliMonth(1)
-      setCurrentJalaliYear((year) => year + 1)
+  const handleNext = () => {
+    if (currentJm === 12) {
+      setCurrentJm(1)
+      setCurrentJy(y => y + 1)
     } else {
-      setCurrentJalaliMonth((month) => month + 1)
+      setCurrentJm(m => m + 1)
     }
   }
 
-  const handleDateSelect = (day: number) => {
+  const handleSelect = (day: number) => {
     const [gy, gm, gd] = jalaliToGregorian(
-      currentJalaliYear,
-      currentJalaliMonth,
-      day,
+      currentJy,
+      currentJm,
+      day
     )
+
     const date = new Date(gy, gm - 1, gd)
     date.setHours(0, 0, 0, 0)
 
-    const [jy, jm, jd] = gregorianToJalali(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-    )
-
-    if (
-      jy === todayJalaliYear &&
-      jm === todayJalaliMonth &&
-      jd > 19
-    ) {
+    if (!isDateSelectable(date)) {
       setShowTooLateDialog(true)
       return
     }
 
-    if (isDateSelectable(date)) {
-      setSelectedDate(date)
-    }
+    setSelectedDate(date)
   }
 
-  const handleConfirm = () => {
-    if (selectedDate) {
-      onSelect(selectedDate)
-    }
-  }
+  const firstWeekday = getFirstWeekday(currentJy, currentJm)
+  const monthLength = getMonthLength(currentJm)
 
-  const days = getDaysInJalaliMonth(currentJalaliYear, currentJalaliMonth)
+  const cells: (number | null)[] = []
+
+  for (let i = 0; i < firstWeekday; i++) cells.push(null)
+  for (let d = 1; d <= monthLength; d++) cells.push(d)
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-8">
+
       <div className="absolute inset-0 z-0">
         <Grainient
           className="w-full h-full"
@@ -184,74 +146,70 @@ export function CalendarStep({ onSelect, onBack }: CalendarStepProps) {
           zoom={0.9}
         />
       </div>
-      <Card className="relative z-10 w-full max-w-md border-border bg-card shadow-xl">
+
+      <Card className="relative z-10 w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Calendar className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl text-card-foreground">
-            روز رو انتخاب کن
-          </CardTitle>
+          <CardTitle>روز رو انتخاب کن</CardTitle>
         </CardHeader>
+
         <CardContent className="space-y-4">
-          {/* Month Navigation */}
-          <div className="flex items-center justify-between">
-            <Button variant="ghost" size="icon" onClick={handlePrevMonth}>
-              <ChevronLeft className="h-5 w-5" />
+
+          {/* nav */}
+          <div className="flex justify-between items-center">
+            <Button variant="ghost" size="icon" onClick={handlePrev}>
+              <ChevronLeft />
             </Button>
-            <span className="text-lg font-semibold text-card-foreground">
-              {persianMonths[currentJalaliMonth - 1]} {currentJalaliYear}
+
+            <span className="font-semibold">
+              {persianMonths[currentJm - 1]} {currentJy}
             </span>
-            <Button variant="ghost" size="icon" onClick={handleNextMonth}>
-              <ChevronRight className="h-5 w-5" />
+
+            <Button variant="ghost" size="icon" onClick={handleNext}>
+              <ChevronRight />
             </Button>
           </div>
 
-          {/* Days of Week */}
-          <div className="grid grid-cols-7 gap-1 text-center">
-            {persianDays.map((day) => (
-              <div
-                key={day}
-                className="py-2 text-sm font-medium text-muted-foreground"
-              >
-                {day}
-              </div>
-            ))}
+          {/* days header */}
+          <div className="grid grid-cols-7 text-center text-sm text-muted-foreground">
+            {persianDays.map(d => <div key={d}>{d}</div>)}
           </div>
 
-          {/* Calendar Days */}
+          {/* grid */}
           <div className="grid grid-cols-7 gap-1">
-            {days.map((day, index) => {
-              if (day === null) {
-                return <div key={`empty-${index}`} />
-              }
+            {cells.map((day, i) => {
+              if (!day) return <div key={i} />
 
               const [gy, gm, gd] = jalaliToGregorian(
-                currentJalaliYear,
-                currentJalaliMonth,
-                day,
+                currentJy,
+                currentJm,
+                day
               )
+
               const date = new Date(gy, gm - 1, gd)
               date.setHours(0, 0, 0, 0)
 
               const isSelectable = isDateSelectable(date)
               const isSelected =
                 selectedDate?.toDateString() === date.toDateString()
+
               const isToday =
-                currentJalaliYear === todayJalaliYear &&
-                currentJalaliMonth === todayJalaliMonth &&
-                day === todayJalaliDay
+                currentJy === todayJy &&
+                currentJm === todayJm &&
+                day === todayJd
 
               return (
                 <button
-                  key={day}
-                  onClick={() => handleDateSelect(day)}
+                  key={i}
+                  onClick={() => handleSelect(day)}
                   disabled={!isSelectable}
                   className={`
-                    aspect-square rounded-lg p-2 text-sm font-medium transition-all
-                    ${!isSelectable ? "cursor-not-allowed text-muted-foreground/40" : "cursor-pointer hover:bg-primary/10"}
-                    ${isSelected ? "bg-primary text-primary-foreground shadow-md" : ""}
-                    ${isToday && !isSelected ? "border-2 border-primary" : ""}
+                    aspect-square rounded-lg text-sm
+                    ${!isSelectable ? "text-muted-foreground/40" : "hover:bg-primary/10"}
+                    ${isSelected ? "bg-primary text-white" : ""}
+                    ${isToday && !isSelected ? "border border-primary" : ""}
                   `}
                 >
                   {day}
@@ -260,29 +218,22 @@ export function CalendarStep({ onSelect, onBack }: CalendarStepProps) {
             })}
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 pt-4">
-            
-            <Button
-              onClick={handleConfirm}
-              disabled={!selectedDate}
-              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              تایید
-            </Button>
-          </div>
+          <Button
+            className="w-full"
+            disabled={!selectedDate}
+            onClick={() => selectedDate && onSelect(selectedDate)}
+          >
+            تایید
+          </Button>
         </CardContent>
       </Card>
 
-      {/* Too Late Dialog */}
       <AlertDialog open={showTooLateDialog} onOpenChange={setShowTooLateDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-center text-2xl">
-              خیلی دیره! ⏰
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-base">
-              روز رو تا ۱۹ خرداد انتخاب کن. بعدش خیلی دیره میشه!
+            <AlertDialogTitle>خیلی دیره ⏰</AlertDialogTitle>
+            <AlertDialogDescription>
+              فقط تا ۱۹ خرداد قابل انتخابه
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogAction className="w-full">
