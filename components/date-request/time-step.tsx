@@ -5,6 +5,7 @@ import { Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Grainient from "@/components/Grainient"
+import SideRays from "../SideRays"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,9 +58,9 @@ export function TimeStep({ onSelect, onBack }: TimeStepProps) {
       <div className="absolute inset-0 z-0">
         <Grainient
           className="w-full h-full"
-          color1="#ffffff"
+          color1="#5d2eb9"
           color2="#ff2757"
-          color3="#B497CF"
+          color3="#c41a7d"
           timeSpeed={0.25}
           colorBalance={-0.13}
           warpStrength={1}
@@ -82,7 +83,22 @@ export function TimeStep({ onSelect, onBack }: TimeStepProps) {
           onLoad={() => setIsGradientLoaded(true)}
         />
       </div>
-      <Card className="relative z-10 w-full max-w-md border-border bg-card shadow-xl">
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <SideRays
+          speed={2.5}
+          rayColor1="#ffb3d9"
+          rayColor2="#8d8dff"
+          intensity={2.4}
+          spread={2}
+          origin="top-right"
+          tilt={10}
+          saturation={1.4}
+          blend={0.75}
+          falloff={1.8}
+          opacity={0.9}
+        />
+      </div>
+      <Card className="relative z-20 w-full max-w-md border-border bg-card shadow-xl">
         <CardHeader className="text-center">
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Clock className="h-6 w-6 text-primary" />
@@ -141,10 +157,10 @@ export function TimeStep({ onSelect, onBack }: TimeStepProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-center text-2xl">
-            nch nch nch 
+              nch nch nch
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center text-base">
-             دیگه حداقل 16:00 انتخاب کن 
+              دیگه حداقل 16:00 انتخاب کن
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogAction className="w-full">

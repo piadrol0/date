@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Grainient from "@/components/Grainient"
 import { gregorianToJalali } from "@/lib/utils"
+import SideRays from "../SideRays"
 
 interface DateDetails {
   date: Date
@@ -139,9 +140,9 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
       <div className="absolute inset-0 z-0">
         <Grainient
           className="w-full h-full"
-          color1="#ffffff"
+          color1="#5d2eb9"
           color2="#ff2757"
-          color3="#B497CF"
+          color3="#c41a7d"
           timeSpeed={0.25}
           colorBalance={-0.13}
           warpStrength={1}
@@ -162,6 +163,21 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
           centerY={0}
           zoom={0.9}
           onLoad={() => setIsGradientLoaded(true)}
+        />
+      </div>
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <SideRays
+          speed={2.5}
+          rayColor1="#ffb3d9"
+          rayColor2="#8d8dff"
+          intensity={2.4}
+          spread={2}
+          origin="top-right"
+          tilt={10}
+          saturation={1.4}
+          blend={0.75}
+          falloff={1.8}
+          opacity={0.9}
         />
       </div>
       {/* Celebration animation */}
@@ -255,14 +271,7 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
         </CardContent>
       </Card>
 
-      {!isGradientLoaded && (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-4 bg-black/70 text-white">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-white/30 border-t-white" />
-          <div className="text-center text-lg font-medium">
-            کمی صبر کن تا صفحه آماده بشه
-          </div>
-        </div>
-      )}
+
     </div>
   )
 }

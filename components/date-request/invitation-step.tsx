@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import Grainient from "@/components/Grainient"
 import SplitText from "@/components/SplitText"
+import SideRays from "../SideRays"
 
 interface InvitationStepProps {
   onAccept: () => void
@@ -59,7 +60,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     setNoButtonPosition({ x: newX, y: newY })
     setHoverCount((prev) => Math.min(prev + 1, messages.length - 1))
     setAttemptCount((prev) => prev + 1)
-  }, [messages.length, onReject])
+  }, [messages.length])
 
   return (
     <div
@@ -96,10 +97,25 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
         />
       </div>
 
-
+      {/* Side rays overlay */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <SideRays
+          speed={2.5}
+          rayColor1="#ffb3d9"
+          rayColor2="#8d8dff"
+          intensity={2.4}
+          spread={2}
+          origin="top-right"
+          tilt={10}
+          saturation={1.4}
+          blend={0.75}
+          falloff={1.8}
+          opacity={0.9}
+        />
+      </div>
 
       {/* Floating hearts background */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden z-5">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden z-15">
         {hearts.map((heart) => (
           <Heart
             key={heart.id}

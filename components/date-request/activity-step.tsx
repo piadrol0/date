@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Grainient from "@/components/Grainient"
+import SideRays from "../SideRays"
 
 interface ActivityStepProps {
   onSelect: (activity: string) => void
@@ -38,9 +39,9 @@ export function ActivityStep({ onSelect, onBack }: ActivityStepProps) {
       <div className="absolute inset-0 z-0">
         <Grainient
           className="w-full h-full"
-          color1="#ffffff"
+          color1="#5d2eb9"
           color2="#ff2757"
-          color3="#B497CF"
+          color3="#c41a7d"
           timeSpeed={0.25}
           colorBalance={-0.13}
           warpStrength={1}
@@ -63,13 +64,28 @@ export function ActivityStep({ onSelect, onBack }: ActivityStepProps) {
           onLoad={() => setIsGradientLoaded(true)}
         />
       </div>
-      <Card className="relative z-10 w-full max-w-lg border-border bg-card shadow-xl">
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <SideRays
+          speed={2.5}
+          rayColor1="#ffb3d9"
+          rayColor2="#8d8dff"
+          intensity={2.4}
+          spread={2}
+          origin="top-right"
+          tilt={10}
+          saturation={1.4}
+          blend={0.75}
+          falloff={1.8}
+          opacity={0.9}
+        />
+      </div>
+      <Card className="relative z-20 w-full max-w-lg border-border bg-card shadow-xl">
         <CardHeader className="text-center">
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Sparkles className="h-6 w-6 text-primary" />
           </div>
           <CardTitle className="text-2xl text-card-foreground">
-            چیکار کنیم؟ 
+            چیکار کنیم؟
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -80,10 +96,9 @@ export function ActivityStep({ onSelect, onBack }: ActivityStepProps) {
                 onClick={() => setSelectedActivity(activity.value)}
                 className={`
                   flex flex-col items-center gap-2 rounded-xl border-2 p-4 text-center transition-all
-                  ${
-                    selectedActivity === activity.value
-                      ? "border-primary bg-primary/10 shadow-md"
-                      : "border-border hover:border-primary/50 hover:bg-secondary"
+                  ${selectedActivity === activity.value
+                    ? "border-primary bg-primary/10 shadow-md"
+                    : "border-border hover:border-primary/50 hover:bg-secondary"
                   }
                 `}
               >
@@ -100,7 +115,7 @@ export function ActivityStep({ onSelect, onBack }: ActivityStepProps) {
 
           {/* Actions */}
           <div className="flex gap-3 pt-4">
-            
+
             <Button
               onClick={handleConfirm}
               disabled={!selectedActivity}
