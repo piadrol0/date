@@ -265,7 +265,7 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              پیام به سلطان
+              Text Me 
             </a>
           </Button>
         </CardContent>
