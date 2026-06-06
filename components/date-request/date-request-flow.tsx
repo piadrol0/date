@@ -6,7 +6,6 @@ import { CalendarStep } from "./calendar-step"
 import { TimeStep } from "./time-step"
 import { ActivityStep } from "./activity-step"
 import { ConfirmationStep } from "./confirmation-step"
-import { ImageSequenceStep } from "./image-sequence-step"
 
 type Step = "invitation" | "imageSequence" | "calendar" | "time" | "activity" | "confirmation"
 
@@ -93,9 +92,7 @@ export function DateRequestFlow() {
       {currentStep === "invitation" && (
         <InvitationStep onAccept={handleAcceptInvitation} onReject={handleRejectInvitation} />
       )}
-      {currentStep === "imageSequence" && (
-        <ImageSequenceStep onFinish={handleSequenceComplete} />
-      )}
+     
       {currentStep === "calendar" && (
         <CalendarStep
           onSelect={handleSelectDate}

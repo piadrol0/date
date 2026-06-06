@@ -23,7 +23,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
   const noButtonRef = useRef<HTMLButtonElement>(null)
 
   const messages = [
-    "Want to go on a date with me?",
+    "?Want to go on a date with me",
     "الان مطمئنی؟ دیگه؟",
     "مطمئنی؟",
     "کاملا مطمئنی؟",
@@ -58,13 +58,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
 
     setNoButtonPosition({ x: newX, y: newY })
     setHoverCount((prev) => Math.min(prev + 1, messages.length - 1))
-    setAttemptCount((prev) => {
-      const nextCount = prev + 1
-      if (nextCount >= 2) {
-        onReject()
-      }
-      return nextCount
-    })
+    setAttemptCount((prev) => prev + 1)
   }, [messages.length, onReject])
 
   return (
@@ -76,9 +70,9 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       <div className="absolute inset-0 z-0">
         <Grainient
           className="w-full h-full"
-          color1="#ffffff"
+          color1="#5d2eb9"
           color2="#ff2757"
-          color3="#B497CF"
+          color3="#c41a7d"
           timeSpeed={0.25}
           colorBalance={-0.13}
           warpStrength={1}
@@ -169,9 +163,9 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
             onClick={() => {
               setAttemptCount((prev) => {
                 const nextCount = prev + 1
-                if (nextCount >= 2) {
-                  onReject()
-                }
+                // if (nextCount >= 2) {
+                //   onReject()
+                // }
                 return nextCount
               })
             }}
