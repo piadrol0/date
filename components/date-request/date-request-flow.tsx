@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+
 import { InvitationStep } from "./invitation-step"
 import { CalendarStep } from "./calendar-step"
 import { TimeStep } from "./time-step"
@@ -10,7 +12,6 @@ import { ConfirmationStep } from "./confirmation-step"
 
 type Step =
   | "invitation"
-  | "imageSequence"
   | "calendar"
   | "time"
   | "activity"
@@ -25,6 +26,17 @@ interface DateDetails {
 }
 
 export function DateRequestFlow() {
+  const searchParams = useSearchParams()
+  const id = searchParams.get("id")
+
+  const people: Record<string, string> = {
+    h7k2: "Helia",
+    s9p4: "Roya",
+    n3x8: "Mania",
+  }
+
+  const personName = people[id ?? ""] || "Unknown"
+
   const [currentStep, setCurrentStep] = useState<Step>("invitation")
 
   const [dateDetails, setDateDetails] = useState<DateDetails>({
@@ -34,39 +46,25 @@ export function DateRequestFlow() {
     anythingElse: "",
   })
 
-  useEffect(() => {
-    console.log(dateDetails)
-  }, [dateDetails])
-
-  const handleAcceptInvitation = () => {
-    setCurrentStep("calendar")
-  }
+  const handleAcceptInvitation = () => setCurrentStep("calendar")
 
   const handleSelectDate = (date: Date) => {
-    setDateDetails((prev) => ({ ...prev, date }))
+    setDateDetails((p) => ({ ...p, date }))
     setCurrentStep("time")
   }
 
   const handleSelectTime = (time: string) => {
-    setDateDetails((prev) => ({ ...prev, time }))
+    setDateDetails((p) => ({ ...p, time }))
     setCurrentStep("activity")
   }
 
   const handleSelectActivity = (activity: string) => {
-    setDateDetails((prev) => ({
-      ...prev,
-      activity,
-    }))
-
+    setDateDetails((p) => ({ ...p, activity }))
     setCurrentStep("anythingElse")
   }
 
   const handleAnythingElse = (text: string) => {
-    setDateDetails((prev) => ({
-      ...prev,
-      anythingElse: text,
-    }))
-
+    setDateDetails((p) => ({ ...p, anythingElse: text }))
     setCurrentStep("confirmation")
   }
 
@@ -77,45 +75,29 @@ export function DateRequestFlow() {
       activity: null,
       anythingElse: "",
     })
-
     setCurrentStep("invitation")
   }
 
   return (
     <main className="min-h-screen bg-background">
       {currentStep === "invitation" && (
-        <InvitationStep
-          onAccept={handleAcceptInvitation}
-          onReject={() => {}}
-        />
+        <InvitationStep onAccept={handleAcceptInvitation} onReject={() => { }} />
       )}
 
       {currentStep === "calendar" && (
-        <CalendarStep
-          onSelect={handleSelectDate}
-          onBack={() => setCurrentStep("invitation")}
-        />
+        <CalendarStep onSelect={handleSelectDate} onBack={() => setCurrentStep("invitation")} />
       )}
 
       {currentStep === "time" && (
-        <TimeStep
-          onSelect={handleSelectTime}
-          onBack={() => setCurrentStep("calendar")}
-        />
+        <TimeStep onSelect={handleSelectTime} onBack={() => setCurrentStep("calendar")} />
       )}
 
       {currentStep === "activity" && (
-        <ActivityStep
-          onSelect={handleSelectActivity}
-          onBack={() => setCurrentStep("time")}
-        />
+        <ActivityStep onSelect={handleSelectActivity} onBack={() => setCurrentStep("time")} />
       )}
 
       {currentStep === "anythingElse" && (
-        <AnythingElseStep
-          onSubmit={handleAnythingElse}
-          onBack={() => setCurrentStep("activity")}
-        />
+        <AnythingElseStep onSubmit={handleAnythingElse} onBack={() => setCurrentStep("activity")} />
       )}
 
       {currentStep === "confirmation" &&
@@ -123,6 +105,7 @@ export function DateRequestFlow() {
         dateDetails.time &&
         dateDetails.activity && (
           <ConfirmationStep
+            userName={personName}
             details={{
               date: dateDetails.date,
               time: dateDetails.time,

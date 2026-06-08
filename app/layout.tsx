@@ -7,7 +7,7 @@ import Grainient from '@/components/Grainient';
 const vazirmatn = Vazirmatn({ subsets: ["arabic"] });
 
 export const metadata: Metadata = {
-  title: 'Helia',
+
   description: 'A romantic date invitation',
   generator: 'v0.app',
   icons: {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
         url: '/helia.jpg',
         media: '(prefers-color-scheme: light)',
       },
-      
+
     ],
     apple: '/apple-icon.png',
   },
