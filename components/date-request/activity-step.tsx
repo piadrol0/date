@@ -14,12 +14,12 @@ interface ActivityStepProps {
 
 const activities = [
   { value: "restaurant", label: "رستوران", icon: "🍽️", description: "شام " },
-  { value: "cafe", label: "کافه", icon: "☕", description: "قهوه" },
-  { value: "park", label: "بام", icon: "🌳", description: "زعفرانیه/ولنجک" },
-  { value: "museum", label: "موزه/گالری", icon: "🎨", description: "ژوژمااااان" },
+  { value: "cafe", label: "کافه", icon: "☕", description: "کارامل ماکیاتو" },
+  { value: "park", label: "بام", icon: "🌳", description: "" },
+  { value: "museum", label: "موزه/گالری", icon: "🎨", description: "گالری " },
   { value: "shopping", label: "مال", icon: "🛍️", description: "idk why" },
-  { value: "concert", label: "کنسرت", icon: "🎵", description: "دونه دونه" },
-  { value: "bowling", label: "بیلیارد", icon: "🎳", description: "بام ولنجک" },
+  { value: "concert", label: "کنسرت", icon: "🎵", description: "" },
+  { value: "bowling", label: "بیلیارد", icon: "🎱", description: "بام ولنجک" },
   // { value: "arcade", label: "گیم نت", icon: "🎮", description: "بازی و هیجان" },
   { value: "surprise", label: "سورپرایز!", icon: "🎁", description: "هر چی تو بخوای" },
 ]

@@ -119,6 +119,7 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
             activity: details.activity,
             formattedActivity,
             activityIcon: activity?.icon || "",
+            anythingElse: details.anythingElse,
           }),
         })
 
