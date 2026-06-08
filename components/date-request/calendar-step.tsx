@@ -149,8 +149,8 @@ export function CalendarStep({ onSelect }: CalendarStepProps) {
       <div className="absolute inset-0 z-10 pointer-events-none">
         <SideRays
           speed={2.5}
-          rayColor1="#ffb3d9"
-          rayColor2="#8d8dff"
+          rayColor1="#EAB308"
+          rayColor2="#ffb900"
           intensity={2.4}
           spread={2}
           origin="top-right"
@@ -174,7 +174,7 @@ export function CalendarStep({ onSelect }: CalendarStepProps) {
           {/* nav */}
           <div className="flex justify-between items-center">
             <Button variant="ghost" size="icon" onClick={handlePrev}>
-              <ChevronLeft />
+              <ChevronRight />
             </Button>
 
             <span className="font-semibold">
@@ -182,7 +182,7 @@ export function CalendarStep({ onSelect }: CalendarStepProps) {
             </span>
 
             <Button variant="ghost" size="icon" onClick={handleNext}>
-              <ChevronRight />
+              <ChevronLeft />
             </Button>
           </div>
 

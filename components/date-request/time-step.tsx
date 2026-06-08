@@ -58,7 +58,7 @@ export function TimeStep({ onSelect, onBack }: TimeStepProps) {
       <div className="absolute inset-0 z-0">
         <Grainient
           className="w-full h-full"
-          color1="#5d2eb9"
+           color1="#5d2eb9"
           color2="#ff2757"
           color3="#c41a7d"
           timeSpeed={0.25}
@@ -86,8 +86,8 @@ export function TimeStep({ onSelect, onBack }: TimeStepProps) {
       <div className="absolute inset-0 z-10 pointer-events-none">
         <SideRays
           speed={2.5}
-          rayColor1="#ffb3d9"
-          rayColor2="#8d8dff"
+          rayColor1="#EAB308"
+          rayColor2="#ffb900"
           intensity={2.4}
           spread={2}
           origin="top-right"
