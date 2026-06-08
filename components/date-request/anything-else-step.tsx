@@ -89,11 +89,11 @@ export function AnythingElseStep({
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         // placeholder="اگه چیزی هست که اینجا بگی بهم بگو. دسترسی این قسمت دوماه دیگه برای من باز میشه و یادگاری میمونه اینجا"
-                        className="min-h-[180px] w-full rounded-xl border border-border bg-background p-4 resize-none outline-none focus:ring-2 focus:ring-primary"
+                        className="min-h-45 w-full rounded-[12px] border border-border bg-background p-4 resize-none outline-none "
                     />
 
                     <div className="flex gap-3">
-                        
+
 
                         <Button
                             className="flex-1"

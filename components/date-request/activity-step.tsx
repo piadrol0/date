@@ -95,7 +95,7 @@ export function ActivityStep({ onSelect, onBack }: ActivityStepProps) {
                 key={activity.value}
                 onClick={() => setSelectedActivity(activity.value)}
                 className={`
-                  flex flex-col items-center gap-2 rounded-xl border-2 p-4 text-center transition-all
+                  flex flex-col items-center gap-2 rounded-[12px] border-2 p-4 text-center transition-all
                   ${selectedActivity === activity.value
                     ? "border-primary bg-primary/10 shadow-md"
                     : "border-border hover:border-primary/50 hover:bg-secondary"

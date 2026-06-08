@@ -170,8 +170,8 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
       <div className="absolute inset-0 z-10 pointer-events-none">
         <SideRays
           speed={2.5}
-          rayColor1="#fe0000"
-          rayColor2="#fe0000"
+          rayColor1="#96c8ff"
+          rayColor2="#96c8ff"
           intensity={2.4}
           spread={2}
           origin="top-right"
@@ -281,9 +281,9 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
           glareColor="#ffffff"
           glareOpacity={0.35}
           glareSize={220}
-          
+
         >
-          <div className="w-full rounded-[16px] overflow-hidden bg-card border border-border shadow-2xl">
+          <div className="w-full rounded-2xl overflow-hidden bg-card border border-border shadow-2xl">
             <Card className="border-0 bg-transparent w-full">
 
               <CardHeader className="text-center">

@@ -114,7 +114,7 @@ export function TimeStep({ onSelect, onBack }: TimeStepProps) {
                 key={slot.value}
                 onClick={() => handleTimeSelect(slot.value)}
                 className={`
-                  flex items-center justify-center gap-2 rounded-xl border-2 p-4 text-center transition-all
+                  flex items-center justify-center gap-2 rounded-[12px] border-2 p-4 text-center transition-all
                   ${selectedTime === slot.value
                     ? "border-primary bg-primary/10 shadow-md"
                     : "border-border hover:border-primary/50 hover:bg-secondary"
