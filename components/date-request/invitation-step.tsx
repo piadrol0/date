@@ -1,5 +1,5 @@
 "use client"
-
+import { useEffect } from "react"
 import { useMemo, useState, useRef, useCallback } from "react"
 import { Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -7,7 +7,7 @@ import { Spinner } from "@/components/ui/spinner"
 import Grainient from "@/components/Grainient"
 import SplitText from "@/components/SplitText"
 import SideRays from "../SideRays"
-
+import { useSearchParams } from "next/navigation"
 interface InvitationStepProps {
   onAccept: () => void
   onReject: () => void
@@ -19,13 +19,25 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
   const [attemptCount, setAttemptCount] = useState(0)
   const [isGradientLoaded, setIsGradientLoaded] = useState(false)
   const [animationKey, setAnimationKey] = useState(0)
-
   const containerRef = useRef<HTMLDivElement>(null)
   const noButtonRef = useRef<HTMLButtonElement>(null)
+  const searchParams = useSearchParams()
 
+  const id = searchParams.get("id")
+
+  const people: Record<string, string> = {
+    h7k2: "Helia",
+    s9p4: "Roya",
+    n3x8: "Mania",
+  }
+
+  const personName = people[id || ""] || "Unknown"
+  useEffect(() => {
+    document.title = personName
+  }, [personName])
   const messages = [
-    "?Want to go on a date with me",
-    "الان مطمئنی؟ دیگه؟",
+    `?${personName}, Want to go on a date with me`,
+    `${personName} الان مطمئنی؟`,
     "مطمئنی؟",
     "کاملا مطمئنی؟",
     "چقد سختی اه",
@@ -195,7 +207,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-black/70 text-white">
           <Spinner className="size-8" />
           <div className="text-center text-lg font-medium">
-            هلیا یکم صبر کن
+            {personName} یکم صبر کن
           </div>
         </div>
       )}
