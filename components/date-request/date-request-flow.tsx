@@ -5,122 +5,133 @@ import { InvitationStep } from "./invitation-step"
 import { CalendarStep } from "./calendar-step"
 import { TimeStep } from "./time-step"
 import { ActivityStep } from "./activity-step"
+import { AnythingElseStep } from "./anything-else-step"
 import { ConfirmationStep } from "./confirmation-step"
 
-type Step = "invitation" | "imageSequence" | "calendar" | "time" | "activity" | "confirmation"
+type Step =
+  | "invitation"
+  | "imageSequence"
+  | "calendar"
+  | "time"
+  | "activity"
+  | "anythingElse"
+  | "confirmation"
 
 interface DateDetails {
   date: Date | null
   time: string | null
   activity: string | null
+  anythingElse: string
 }
 
 export function DateRequestFlow() {
   const [currentStep, setCurrentStep] = useState<Step>("invitation")
+
   const [dateDetails, setDateDetails] = useState<DateDetails>({
     date: null,
     time: null,
     activity: null,
+    anythingElse: "",
   })
 
-  // Log data whenever it changes
   useEffect(() => {
-    if (dateDetails.date || dateDetails.time || dateDetails.activity) {
-      console.log("=== DATE REQUEST DATA ===")
-      console.log("Date:", dateDetails.date?.toISOString())
-      console.log("Time:", dateDetails.time)
-      console.log("Activity:", dateDetails.activity)
-      console.log("Full Details:", JSON.stringify({
-        date: dateDetails.date?.toISOString(),
-        time: dateDetails.time,
-        activity: dateDetails.activity,
-      }, null, 2))
-      console.log("========================")
-    }
+    console.log(dateDetails)
   }, [dateDetails])
 
   const handleAcceptInvitation = () => {
     setCurrentStep("calendar")
   }
 
-  const handleRejectInvitation = () => {
-    setCurrentStep("imageSequence")
-  }
-
-  const handleSequenceComplete = () => {
-    setDateDetails({ date: null, time: null, activity: null })
-    setCurrentStep("invitation")
-  }
-
   const handleSelectDate = (date: Date) => {
     setDateDetails((prev) => ({ ...prev, date }))
-    console.log("[v0] Date selected:", date.toISOString())
     setCurrentStep("time")
   }
 
   const handleSelectTime = (time: string) => {
     setDateDetails((prev) => ({ ...prev, time }))
-    console.log("[v0] Time selected:", time)
     setCurrentStep("activity")
   }
 
   const handleSelectActivity = (activity: string) => {
-    setDateDetails((prev) => ({ ...prev, activity }))
-    console.log("[v0] Activity selected:", activity)
+    setDateDetails((prev) => ({
+      ...prev,
+      activity,
+    }))
 
-    // Log final data for n8n webhook integration
-    const finalData = {
-      date: dateDetails.date?.toISOString(),
-      time: dateDetails.time,
-      activity: activity,
-      timestamp: new Date().toISOString(),
-    }
-    console.log("=== FINAL DATE REQUEST DATA (for n8n) ===")
-    console.log(JSON.stringify(finalData, null, 2))
-    console.log("=========================================")
+    setCurrentStep("anythingElse")
+  }
+
+  const handleAnythingElse = (text: string) => {
+    setDateDetails((prev) => ({
+      ...prev,
+      anythingElse: text,
+    }))
 
     setCurrentStep("confirmation")
   }
 
   const handleReset = () => {
-    setDateDetails({ date: null, time: null, activity: null })
+    setDateDetails({
+      date: null,
+      time: null,
+      activity: null,
+      anythingElse: "",
+    })
+
     setCurrentStep("invitation")
   }
 
   return (
     <main className="min-h-screen bg-background">
       {currentStep === "invitation" && (
-        <InvitationStep onAccept={handleAcceptInvitation} onReject={handleRejectInvitation} />
+        <InvitationStep
+          onAccept={handleAcceptInvitation}
+          onReject={() => {}}
+        />
       )}
-     
+
       {currentStep === "calendar" && (
         <CalendarStep
           onSelect={handleSelectDate}
           onBack={() => setCurrentStep("invitation")}
         />
       )}
+
       {currentStep === "time" && (
         <TimeStep
           onSelect={handleSelectTime}
           onBack={() => setCurrentStep("calendar")}
         />
       )}
+
       {currentStep === "activity" && (
         <ActivityStep
           onSelect={handleSelectActivity}
           onBack={() => setCurrentStep("time")}
         />
       )}
-      {currentStep === "confirmation" && dateDetails.date && dateDetails.time && dateDetails.activity && (
-        <ConfirmationStep
-          details={{
-            date: dateDetails.date,
-            time: dateDetails.time,
-            activity: dateDetails.activity,
-          }}
-          onReset={handleReset}
+
+      {currentStep === "anythingElse" && (
+        <AnythingElseStep
+          onSubmit={handleAnythingElse}
+          onBack={() => setCurrentStep("activity")}
         />
       )}
+
+      {currentStep === "confirmation" &&
+        dateDetails.date &&
+        dateDetails.time &&
+        dateDetails.activity && (
+          <ConfirmationStep
+            details={{
+              date: dateDetails.date,
+              time: dateDetails.time,
+              activity: dateDetails.activity,
+              anythingElse: dateDetails.anythingElse,
+            }}
+            onReset={handleReset}
+          />
+        )}
     </main>
   )
 }

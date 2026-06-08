@@ -32,7 +32,7 @@ export function CalendarStep({ onSelect }: CalendarStepProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [showTooLateDialog, setShowTooLateDialog] = useState(false)
 
-  // 🧠 Tehran-safe today
+
   const today = new Date(
     new Date().toLocaleString("en-US", { timeZone: "Asia/Tehran" })
   )

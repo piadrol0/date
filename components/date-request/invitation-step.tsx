@@ -71,18 +71,18 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       <div className="absolute inset-0 z-0">
         <Grainient
           className="w-full h-full"
-          color1="#5d2eb9"
-          color2="#ff2757"
-          color3="#c41a7d"
+          color1="#ff0077"
+          color2="#8b4e7d"
+          color3="#9000b9"
           timeSpeed={0.25}
-          colorBalance={-0.13}
+          colorBalance={0}
           warpStrength={1}
-          warpFrequency={10.5}
+          warpFrequency={5}
           warpSpeed={2}
           warpAmplitude={50}
           blendAngle={0}
-          blendSoftness={0.65}
-          rotationAmount={460}
+          blendSoftness={0.05}
+          rotationAmount={0}
           noiseScale={2}
           grainAmount={0.1}
           grainScale={2}
@@ -101,8 +101,8 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       <div className="absolute inset-0 z-10 pointer-events-none">
         <SideRays
           speed={2.5}
-          rayColor1="#EAB308"
-          rayColor2="#ffb900"
+          rayColor1="#96c8ff"
+          rayColor2="#96c8ff"
           intensity={2.4}
           spread={2}
           origin="top-right"

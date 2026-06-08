@@ -7,11 +7,13 @@ import { Button } from "@/components/ui/button"
 import Grainient from "@/components/Grainient"
 import { gregorianToJalali } from "@/lib/utils"
 import SideRays from "../SideRays"
-
+import GlareHoverProps from "@/components/GlareHoverProps"
+import GlareHover from "@/components/GlareHoverProps"
 interface DateDetails {
   date: Date
   time: string
   activity: string
+  anythingElse: string
 }
 
 interface ConfirmationStepProps {
@@ -168,8 +170,8 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
       <div className="absolute inset-0 z-10 pointer-events-none">
         <SideRays
           speed={2.5}
-          rayColor1="#EAB308"
-          rayColor2="#ffb900"
+          rayColor1="#fe0000"
+          rayColor2="#fe0000"
           intensity={2.4}
           spread={2}
           origin="top-right"
@@ -198,7 +200,7 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
         ))}
       </div>
 
-      <Card className="relative z-20 w-full max-w-md border-border bg-card shadow-2xl">
+      {/* <Card className="relative z-20 w-full max-w-md border-border bg-card shadow-2xl">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
             <PartyPopper className="h-8 w-8 text-primary" />
@@ -269,9 +271,92 @@ export function ConfirmationStep({ details, onReset }: ConfirmationStepProps) {
             </a>
           </Button>
         </CardContent>
-      </Card>
+      </Card> */}
+      <div className="w-full max-w-md mx-auto">
+        <GlareHover
+          width="100%"
+          height="auto"
+          background="transparent"
+          borderRadius="16px"
+          glareColor="#ffffff"
+          glareOpacity={0.35}
+          glareSize={220}
+          
+        >
+          <div className="w-full rounded-[16px] overflow-hidden bg-card border border-border shadow-2xl">
+            <Card className="border-0 bg-transparent w-full">
 
+              <CardHeader className="text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
+                  <PartyPopper className="h-8 w-8 text-primary" />
+                </div>
 
+                <CardTitle className="text-3xl text-card-foreground">
+                  !Date Confirmed
+                </CardTitle>
+
+                <p className="mt-2 text-muted-foreground">
+                  che dkhtri bh bh
+                </p>
+              </CardHeader>
+
+              <CardContent className="space-y-6">
+                <div className="space-y-4 rounded-xl bg-secondary/50 p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                      <Calendar className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">تاریخ</p>
+                      <p className="font-semibold text-card-foreground">
+                        {formatDate(details.date)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                      <Clock className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">ساعت</p>
+                      <p className="font-semibold text-card-foreground">
+                        {timeLabels[details.time] || details.time}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                      <Sparkles className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">فعالیت</p>
+                      <p className="font-semibold text-card-foreground">
+                        {activity.icon} {activity.label}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-xl bg-secondary/50 p-4 text-center text-sm text-muted-foreground">
+                  {submitStatus === "sending" && "در حال ارسال اطلاعات به ایمیل..."}
+                  {submitStatus === "success" && "اطلاعات با موفقیت ارسال شد."}
+                  {submitStatus === "error" && "ارسال اطلاعات به ایمیل ناموفق بود. لطفا دوباره امتحان کنید."}
+                </div>
+
+                <Button asChild variant="outline" className="w-full border-border">
+                  <a href="https://t.me/piadrol" target="_blank">
+                    پیام به سلطان
+                  </a>
+                </Button>
+              </CardContent>
+
+            </Card>
+          </div>
+        </GlareHover>
+
+      </div>
     </div>
   )
 }
