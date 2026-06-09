@@ -9,6 +9,7 @@ import Grainient from "@/components/Grainient"
 import SideRays from "../SideRays"
 import GlareHover from "@/components/GlareHoverProps"
 import { gregorianToJalali } from "@/lib/utils"
+import BorderGlow from "../BorderGlow"
 
 interface DateDetails {
   date: Date
@@ -71,7 +72,12 @@ export function ConfirmationStep({
   }
 
   const activity = activityLabels[details.activity]
+  const onSendMessage = () => {
+    // const message = `سلام سلطان جان! 🌟\n\nتاریخ قرارمون رو ثبت کردم:\n📅 تاریخ: ${formatDate(details.date)}\n⏰ ساعت: ${timeLabels[details.time]}\n✨ فعالیت: ${activity?.icon} ${activity?.label}\n\nمنتظر روز موندگاری باش! 😄`
+    const telegramUrl = `https://t.me/piadrol`
+    window.open(telegramUrl, "_blank")
 
+  }
   useEffect(() => {
     const send = async () => {
       setStatus("sending")
@@ -109,63 +115,92 @@ export function ConfirmationStep({
   return (
     <div className="relative flex min-h-screen items-center justify-center">
 
-  <div className="absolute inset-0">
-    <Grainient className="w-full h-full" />
-  </div>
-
-  <Card className="relative z-10 w-full max-w-md">
-
-    <CardHeader className="text-center">
-      <PartyPopper className="mx-auto mb-2" />
-      <CardTitle>{userName} Date Confirmed</CardTitle>
-    </CardHeader>
-
-    <CardContent className="space-y-5">
-
-      {/* info box */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 space-y-4 shadow-lg">
-
-        <div className="flex items-center justify-between text-sm">
-          <span className="opacity-60">📅 تاریخ</span>
-          <span className="font-medium text-right">
-            {formatDate(details.date)}
-          </span>
-        </div>
-
-        <div className="h-px bg-white/10" />
-
-        <div className="flex items-center justify-between text-sm">
-          <span className="opacity-60">⏰ ساعت</span>
-          <span className="font-medium">
-            {timeLabels[details.time]}
-          </span>
-        </div>
-
-        <div className="h-px bg-white/10" />
-
-        <div className="flex items-center justify-between text-sm">
-          <span className="opacity-60">✨ فعالیت</span>
-          <span className="font-medium">
-            {activity?.icon} {activity?.label}
-          </span>
-        </div>
+      <div className="absolute inset-0">
+        <Grainient className="w-full h-full" />
 
       </div>
-
-      {/* status */}
-      <div className="text-center text-xs px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/70">
-        {status === "sending" && "در حال ارسال..."}
-        {status === "success" && "ارسال شد ✔"}
-        {status === "error" && "خطا در ارسال"}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <SideRays
+          speed={2.5}
+          rayColor1="#EAB308"
+          rayColor2="#ffb900"
+          intensity={2.4}
+          spread={2}
+          origin="top-right"
+          tilt={10}
+          saturation={1.4}
+          blend={0.75}
+          falloff={1.8}
+          opacity={0.9}
+        />
       </div>
 
-      <Button onClick={onReset} className="w-full">
-        Reset
-      </Button>
 
-    </CardContent>
-  </Card>
 
-</div>
+      <BorderGlow className="relative z-20 w-full max-w-md"
+        edgeSensitivity={30}
+        glowColor="40 80 80"
+        backgroundColor="transparent"
+        borderRadius={28}
+        glowRadius={40}
+        glowIntensity={1}
+        coneSpread={25}
+        animated={false}
+        colors={['#c084fc', '#f472b6', '#38bdf8']}
+      >
+        <Card className="w-full border-transparent bg-transparent shadow-none">
+          <CardHeader className="text-center">
+            <div className="rounded-full w-10 h-10 bg-white/20 flex justify-center pt-1.5 items-center mx-auto mb-2">
+
+              <PartyPopper className="mx-auto mb-2 h-6 w-6 text-primary" />
+            </div>
+            <CardTitle className="text-primary">{userName} Date Confirmed</CardTitle>
+          </CardHeader>
+
+          <CardContent className="space-y-5">
+
+            <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 space-y-4 shadow-lg">
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="opacity-60">📅 تاریخ</span>
+                <span className="font-medium text-right">
+                  {formatDate(details.date)}
+                </span>
+              </div>
+
+              <div className="h-px bg-white/10" />
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="opacity-60">⏰ ساعت</span>
+                <span className="font-medium">
+                  {timeLabels[details.time]}
+                </span>
+              </div>
+
+              <div className="h-px bg-white/10" />
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="opacity-60">✨ فعالیت</span>
+                <span className="font-medium">
+                  {activity?.icon} {activity?.label}
+                </span>
+              </div>
+
+            </div>
+
+            <div className="text-center text-xs px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/70">
+              {status === "sending" && "در حال ارسال..."}
+              {status === "success" && "ارسال شد ✔"}
+              {status === "error" && "خطا در ارسال"}
+            </div>
+
+            <Button onClick={onSendMessage} className="w-full">
+              پیام به آریا
+            </Button>
+
+          </CardContent>
+        </Card>
+      </BorderGlow>
+    </div>
   )
 }

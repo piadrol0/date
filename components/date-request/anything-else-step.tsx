@@ -80,7 +80,9 @@ export function AnythingElseStep({
 
                     <ul className="text-sm text-muted-foreground ">
                         <li>اگه چیزی هست که اینجا بگی بهم بگو.</li>
-                        <li>دسترسی این قسمت دوماه دیگه برای من باز میشه و یادگاری میمونه اینجا</li>
+                        <li>
+                            این قسمت دوماه دیگه پیامش میاد برام و میتونی یادگاری بنویسی چیزی
+                        </li>
                     </ul>
                 </CardHeader>
 

@@ -59,7 +59,7 @@ export function CalendarStep({ onSelect }: CalendarStepProps) {
       jy === todayJy &&
       jm === todayJm &&
       jd >= todayJd &&
-      jd <= 19
+      jd <= 30
     )
   }
 
@@ -70,7 +70,7 @@ export function CalendarStep({ onSelect }: CalendarStepProps) {
   // ✅ correct weekday start
   const getFirstWeekday = (jy: number, jm: number) => {
     const [gy, gm, gd] = jalaliToGregorian(jy, jm, 1)
-    return (new Date(gy, gm - 1, gd).getDay() + 6) % 7
+    return (new Date(gy, gm - 3, gd).getDay() + 7) % 7
   }
 
   const handlePrev = () => {
