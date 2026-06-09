@@ -8,8 +8,13 @@
 //     </Suspense>
 //   )
 // }
-import InvitationWrapper from "@/components/date-request/invitation-wrapper"
+import { Suspense } from "react"
+import { DateRequestFlow } from "@/components/date-request/date-request-flow"
 
 export default function Page() {
-  return <InvitationWrapper />
+  return (
+    <Suspense fallback={null}>
+      <DateRequestFlow />
+    </Suspense>
+  )
 }

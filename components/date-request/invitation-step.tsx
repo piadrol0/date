@@ -8,6 +8,7 @@ import Grainient from "@/components/Grainient"
 import SplitText from "@/components/SplitText"
 import SideRays from "../SideRays"
 import { useSearchParams } from "next/navigation"
+import Image from "next/image"
 interface InvitationStepProps {
   onAccept: () => void
   onReject: () => void
@@ -74,7 +75,15 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     setHoverCount((prev) => Math.min(prev + 1, messages.length - 1))
     setAttemptCount((prev) => prev + 1)
   }, [messages.length])
+  const [showIntro, setShowIntro] = useState(true)
 
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setShowIntro(false)
+    }, 2500)
+
+    return () => clearTimeout(t)
+  }, [])
   return (
     <div
       ref={containerRef}
@@ -210,6 +219,12 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
           <div className="text-center text-lg font-medium">
             {personName} یکم صبر کن
           </div>
+        </div>
+      )}
+      {showIntro && (
+        <div className="absolute inset-0 z-50 flex flex-col gap-5 items-center justify-center bg-black/90 text-white text-2xl font-bold">
+          تب مرورگرو چک کردی؟ 👀
+          <Image src="/screen.png" alt="tab info" width={250} height={250} />
         </div>
       )}
     </div>

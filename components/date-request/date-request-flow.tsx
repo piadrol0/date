@@ -77,9 +77,22 @@ export function DateRequestFlow() {
     })
     setCurrentStep("invitation")
   }
+  const [showIntro, setShowIntro] = useState(true)
 
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setShowIntro(false)
+    }, 2500)
+
+    return () => clearTimeout(t)
+  }, [])
   return (
     <main className="min-h-screen bg-background">
+      {showIntro && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 text-white text-2xl font-bold">
+          تب مرورگرو چک کردی؟ 👀
+        </div>
+      )}
       {currentStep === "invitation" && (
         <InvitationStep onAccept={handleAcceptInvitation} onReject={() => { }} />
       )}
