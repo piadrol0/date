@@ -37,7 +37,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     document.title = personName
   }, [personName])
   const messages = [
-    `${personName}, Want to go on a date with me ?`,
+    `?${personName}, Want to go on a date with me `,
     ` الان مطمئنی؟`,
     "مطمئنی؟",
     "کاملا مطمئنی؟",

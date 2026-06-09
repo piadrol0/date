@@ -10,7 +10,7 @@ import SideRays from "../SideRays"
 import GlareHover from "@/components/GlareHoverProps"
 import { gregorianToJalali } from "@/lib/utils"
 import BorderGlow from "../BorderGlow"
-
+import SplitText from "@/components/SplitText"
 interface DateDetails {
   date: Date
   time: string
@@ -61,6 +61,7 @@ export function ConfirmationStep({
 }: ConfirmationStepProps) {
 
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
+  const [animationKey, setAnimationKey] = useState(0)
 
   const formatDate = (date: Date) => {
     const [jy, jm, jd] = gregorianToJalali(
@@ -73,7 +74,7 @@ export function ConfirmationStep({
 
   const activity = activityLabels[details.activity]
   const onSendMessage = () => {
-    // const message = `سلام سلطان جان! 🌟\n\nتاریخ قرارمون رو ثبت کردم:\n📅 تاریخ: ${formatDate(details.date)}\n⏰ ساعت: ${timeLabels[details.time]}\n✨ فعالیت: ${activity?.icon} ${activity?.label}\n\nمنتظر روز موندگاری باش! 😄`
+
     const telegramUrl = `https://t.me/piadrol`
     window.open(telegramUrl, "_blank")
 
@@ -135,7 +136,7 @@ export function ConfirmationStep({
 
 
 
-      <BorderGlow className="relative z-20 w-full bg-red-500"
+      <BorderGlow className="relative z-20 md:w-[60%] w-full bg-red-500"
         edgeSensitivity={30}
 
         glowColor="40 80 80"
@@ -154,6 +155,22 @@ export function ConfirmationStep({
               <PartyPopper className="mx-auto mb-2 h-6 w-6 text-primary" />
             </div>
             <CardTitle className="text-primary">{userName} Date Confirmed</CardTitle>
+            <SplitText
+              key={animationKey}
+              text="✨ Ch dkhtri bh bh ✨"
+              className="text-center text-white mt-5"
+              tag="p"
+              splitType="words"
+              from={{ opacity: 0, y: 40 }}
+              to={{ opacity: 1, y: 0 }}
+              ease="power3.out"
+              textAlign="center"
+              duration={0.8}
+              delay={50}
+              onLetterAnimationComplete={() => {
+                setTimeout(() => setAnimationKey(prev => prev + 1), 5000)
+              }}
+            />
           </CardHeader>
 
           <CardContent className="space-y-5">
