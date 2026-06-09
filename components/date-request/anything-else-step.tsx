@@ -79,9 +79,9 @@ export function AnythingElseStep({
                     </CardTitle>
 
                     <ul className="text-sm text-muted-foreground ">
-                        <li>اگه چیزی هست که اینجا بگی بهم بگو.</li>
+                        <li>چیزی هست بهم بگی؟</li>
                         <li>
-                            این قسمت <span className="text-primary"> دوماه</span> دیگه پیامش میاد برام و میتونی یادگاری بنویسی چیزی
+                            این قسمت <span className="text-primary"> دوماه</span> دیگه پیامش میاد برام و میتونی چیزی خواستی بنویسی 
                         </li>
                     </ul>
                 </CardHeader>

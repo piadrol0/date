@@ -211,7 +211,7 @@ export function ConfirmationStep({
             </div>
 
             <Button onClick={onSendMessage} className="w-full">
-              پیام به آریا
+              وصلم کن به آریا
             </Button>
 
           </CardContent>
