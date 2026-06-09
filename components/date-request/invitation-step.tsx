@@ -29,6 +29,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     h7k2: "Helia",
     s9p4: "Roya",
     n3x8: "Mania",
+
   }
 
   const personName = people[id || ""] || "Unknown"
@@ -36,8 +37,8 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     document.title = personName
   }, [personName])
   const messages = [
-    `?${personName}, Want to go on a date with me`,
-    `${personName} الان مطمئنی؟`,
+    `${personName}, Want to go on a date with me ?`,
+    ` الان مطمئنی؟`,
     "مطمئنی؟",
     "کاملا مطمئنی؟",
     "چقد سختی اه",

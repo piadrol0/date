@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl" className="">
       <body className={`${vazirmatn.className} antialiased`}>
-        <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
+        <div className="relative min-h-screen w-screen overflow-x-hidden">
 
           {/* Background */}
           <div className="absolute inset-0 z-0">

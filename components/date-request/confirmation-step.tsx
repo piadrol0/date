@@ -113,11 +113,9 @@ export function ConfirmationStep({
   }, [details, userName])
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center">
-
+    <div className="relative flex min-h-screen items-center justify-center w-full px-4 py-8">
       <div className="absolute inset-0">
         <Grainient className="w-full h-full" />
-
       </div>
       <div className="absolute inset-0 z-10 pointer-events-none">
         <SideRays
@@ -137,8 +135,9 @@ export function ConfirmationStep({
 
 
 
-      <BorderGlow className="relative z-20 w-full max-w-md"
+      <BorderGlow className="relative z-20 w-full bg-red-500"
         edgeSensitivity={30}
+
         glowColor="40 80 80"
         backgroundColor="transparent"
         borderRadius={28}
