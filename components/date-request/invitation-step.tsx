@@ -45,6 +45,10 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     "چقد سختی اه",
     "بزن آره دیگه",
     "فکر کنم دیگه باید قبول کنی",
+    "وا",
+    "واا",
+    "وااا",
+    "وااااااااااا"
   ]
 
   const hearts = useMemo(
