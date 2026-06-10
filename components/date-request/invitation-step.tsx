@@ -43,6 +43,10 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
   // }, [personName])
   const personName = people[id || ""] || "Unknown"
   const personImage = peopleImages[id || ""] || "/default.jpg"
+  const isMobile =
+    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+
+  const device = isMobile ? "Mobile" : "Desktop"
   useEffect(() => {
     fetch("https://piadrol2356.app.n8n.cloud/webhook/submit-form", {
       method: "POST",
@@ -53,6 +57,9 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
         event: "site_opened",
         personName,
         id,
+        device: /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+          ? "Mobile"
+          : "Desktop",
         page: window.location.href,
         userAgent: navigator.userAgent,
         language: navigator.language,
@@ -81,6 +88,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       h7k2: "/helia.jpg",
       s9p4: "/icon-dark-32x32.png",
       n3x8: "/icon-dark-32x32.png",
+
     }
 
     favicon.href = icons[id || ""] || "/favicon.ico"
