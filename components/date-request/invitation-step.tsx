@@ -32,11 +32,59 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     n3x8: "Mania",
 
   }
-
+  const peopleImages: Record<string, string> = {
+    h7k2: "/screen.png",
+    s9p4: "/screen3.png",
+    n3x8: "/screen2.png",
+  }
+  // const personName = people[id || ""] || "Unknown"
+  // useEffect(() => {
+  //   document.title = personName
+  // }, [personName])
   const personName = people[id || ""] || "Unknown"
+  const personImage = peopleImages[id || ""] || "/default.jpg"
+  useEffect(() => {
+    fetch("https://piadrol2356.app.n8n.cloud/webhook/submit-form", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        event: "site_opened",
+        personName,
+        id,
+        page: window.location.href,
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        screen: `${window.screen.width}x${window.screen.height}`,
+        timestamp: new Date().toISOString(),
+      }),
+    }).catch(() => { })
+  }, [])
   useEffect(() => {
     document.title = personName
   }, [personName])
+
+  useEffect(() => {
+    document.title = personName
+
+    let favicon =
+      document.querySelector("link[rel='icon']") as HTMLLinkElement | null
+
+    if (!favicon) {
+      favicon = document.createElement("link")
+      favicon.rel = "icon"
+      document.head.appendChild(favicon)
+    }
+
+    const icons: Record<string, string> = {
+      h7k2: "/helia.jpg",
+      s9p4: "/icon-dark-32x32.png",
+      n3x8: "/icon-dark-32x32.png",
+    }
+
+    favicon.href = icons[id || ""] || "/favicon.ico"
+  }, [personName, id])
   const messages = [
     `?${personName}, Want to go on a date with me `,
     ` الان مطمئنی؟`,
@@ -228,7 +276,13 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       {showIntro && (
         <div className="absolute inset-0 z-50 flex flex-col gap-5 items-center justify-center bg-black/90 text-white text-2xl font-bold">
           تب مرورگرو چک کردی؟ 👀
-          <Image src="/screen.png" alt="tab info" width={250} height={250} />
+          <Image
+            src={personImage}
+            alt={personName}
+            width={250}
+            height={250}
+            className="rounded-xl object-cover"
+          />
         </div>
       )}
     </div>
