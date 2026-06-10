@@ -23,7 +23,12 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const noButtonRef = useRef<HTMLButtonElement>(null)
   const searchParams = useSearchParams()
-
+  const [entryTime] = useState(Date.now())
+  const [clickCount, setClickCount] = useState({
+    yes: 0,
+    no: 0,
+  })
+  const [firstInteraction, setFirstInteraction] = useState<string | null>(null)
   const id = searchParams.get("id")
 
   const people: Record<string, string> = {
@@ -47,25 +52,110 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
 
   const device = isMobile ? "Mobile" : "Desktop"
+  const entryTimeISO = new Date(entryTime).toISOString()
+  const [timeOnPage, setTimeOnPage] = useState(0)
+  const hasSentRef = useRef(false)
   useEffect(() => {
-    fetch("https://piadrol2356.app.n8n.cloud/webhook/submit-form", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        event: "site_opened",
-        personName,
-        id,
-        device: /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
-          ? "Mobile"
-          : "Desktop",
-        page: window.location.href,
+    const interval = setInterval(() => {
+      setTimeOnPage(Date.now() - entryTime)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+  // useEffect(() => {
+  //   fetch("https://piadrol2356.app.n8n.cloud/webhook/submit-form", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       event: "site_opened",
+  //       personName,
+  //       id,
+  //       device: /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+  //         ? "Mobile"
+  //         : "Desktop",
+  //       page: window.location.href,
+  //       userAgent: navigator.userAgent,
+  //       language: navigator.language,
+  //       screen: `${window.screen.width}x${window.screen.height}`,
+  //       timestamp: new Date().toISOString(),
+  //       entry_time: entryTimeISO,
+  //       time_on_page: timeOnPage,
+  //       click_count: clickCount,
+  //       first_interaction: firstInteraction,
+  //     }),
+  //   }).catch(() => { })
+  // }, [])
+//   نام: {{$json.body.userName}}
+
+// تاریخ: {{$json.body.date}}
+
+// ساعت: {{$json.body.time}}
+
+// فعالیت: {{$json.body.activity}}
+
+// توضیحات: {{$json.body.anythingElse}}
+
+// دستگاه: {{$json.body.device.platform}} 
+
+// موبایل: {{$json.body.device.mobile}}
+
+// زبان: {{$json.body.device.language}}
+
+// رزولوشن: {{$json.body.device.screen}}
+
+// UserAgent: {{$json.body.device.userAgent}}
+
+
+
+// ورود: {{$json.body.entry_time}}
+
+// زمان داخل صفحه: {{$json.body.time_on_page}} ms
+
+
+
+// کلیک‌ها:
+
+// YES: {{$json.body.click_count.yes}}
+
+// NO: {{$json.body.click_count.no}}
+
+
+
+// اولین تعامل: {{$json.body.first_interaction}}
+
+
+
+// لینک: {{$json.page}}
+  useEffect(() => {
+    if (hasSentRef.current) return
+    hasSentRef.current = true
+
+    const payload = {
+      event: "site_opened",
+      personName,
+      id,
+
+      device: {
         userAgent: navigator.userAgent,
+        platform: navigator.platform,
         language: navigator.language,
         screen: `${window.screen.width}x${window.screen.height}`,
-        timestamp: new Date().toISOString(),
-      }),
+        mobile: /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent),
+      },
+
+      entry_time: new Date(entryTime).toISOString(),
+      time_on_page: 0, // موقع ورود هنوز واقعی نیست
+      click_count: clickCount,
+      first_interaction: firstInteraction,
+      page: window.location.href,
+    }
+
+    fetch("https://piadrol2356.app.n8n.cloud/webhook/submit-form", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     }).catch(() => { })
   }, [])
   useEffect(() => {
@@ -121,6 +211,9 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
 
   const moveButton = useCallback(() => {
     if (!containerRef.current || !noButtonRef.current) return
+    if (!firstInteraction) {
+      setFirstInteraction("hover_no_button")
+    }
 
     const container = containerRef.current.getBoundingClientRect()
     const button = noButtonRef.current.getBoundingClientRect()
@@ -241,7 +334,14 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
 
         <div className="flex flex-col items-center gap-6 sm:flex-row">
           <Button
-            onClick={onAccept}
+            onClick={() => {
+              if (!firstInteraction) {
+                setFirstInteraction("accept_click")
+              }
+
+              setClickCount((p) => ({ ...p, yes: p.yes + 1 }))
+              onAccept()
+            }}
             size="lg"
             className="min-w-35 bg-primary text-lg text-primary-foreground shadow-lg transition-all hover:scale-105 hover:bg-primary/90 hover:shadow-xl"
           >
@@ -259,13 +359,8 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
             onMouseEnter={moveButton}
             onTouchStart={moveButton}
             onClick={() => {
-              setAttemptCount((prev) => {
-                const nextCount = prev + 1
-                // if (nextCount >= 2) {
-                //   onReject()
-                // }
-                return nextCount
-              })
+              setClickCount((p) => ({ ...p, no: p.no + 1 }))
+              setAttemptCount((prev) => prev + 1)
             }}
           >
             NO
