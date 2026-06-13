@@ -35,12 +35,13 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     h7k2: "Helia",
     s9p4: "Roya",
     n3x8: "Mania",
-
+    p5v6: "Parmida",
   }
   const peopleImages: Record<string, string> = {
     h7k2: "/screen.png",
     s9p4: "/screen3.png",
     n3x8: "/screen2.png",
+    p5v6: "parmidascreen.png",
   }
   // const personName = people[id || ""] || "Unknown"
   // useEffect(() => {
@@ -62,72 +63,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
 
     return () => clearInterval(interval)
   }, [])
-  // useEffect(() => {
-  //   fetch("https://piadrol2356.app.n8n.cloud/webhook/submit-form", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       event: "site_opened",
-  //       personName,
-  //       id,
-  //       device: /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
-  //         ? "Mobile"
-  //         : "Desktop",
-  //       page: window.location.href,
-  //       userAgent: navigator.userAgent,
-  //       language: navigator.language,
-  //       screen: `${window.screen.width}x${window.screen.height}`,
-  //       timestamp: new Date().toISOString(),
-  //       entry_time: entryTimeISO,
-  //       time_on_page: timeOnPage,
-  //       click_count: clickCount,
-  //       first_interaction: firstInteraction,
-  //     }),
-  //   }).catch(() => { })
-  // }, [])
-//   نام: {{$json.body.userName}}
 
-// تاریخ: {{$json.body.date}}
-
-// ساعت: {{$json.body.time}}
-
-// فعالیت: {{$json.body.activity}}
-
-// توضیحات: {{$json.body.anythingElse}}
-
-// دستگاه: {{$json.body.device.platform}} 
-
-// موبایل: {{$json.body.device.mobile}}
-
-// زبان: {{$json.body.device.language}}
-
-// رزولوشن: {{$json.body.device.screen}}
-
-// UserAgent: {{$json.body.device.userAgent}}
-
-
-
-// ورود: {{$json.body.entry_time}}
-
-// زمان داخل صفحه: {{$json.body.time_on_page}} ms
-
-
-
-// کلیک‌ها:
-
-// YES: {{$json.body.click_count.yes}}
-
-// NO: {{$json.body.click_count.no}}
-
-
-
-// اولین تعامل: {{$json.body.first_interaction}}
-
-
-
-// لینک: {{$json.page}}
   useEffect(() => {
     if (hasSentRef.current) return
     hasSentRef.current = true
@@ -146,7 +82,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       },
 
       entry_time: new Date(entryTime).toISOString(),
-      time_on_page: 0, // موقع ورود هنوز واقعی نیست
+      time_on_page: 0,
       click_count: clickCount,
       first_interaction: firstInteraction,
       page: window.location.href,
@@ -178,6 +114,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       h7k2: "/helia.jpg",
       s9p4: "/icon-dark-32x32.png",
       n3x8: "/icon-dark-32x32.png",
+      p5v6: "/parmida.jpeg"
 
     }
 
