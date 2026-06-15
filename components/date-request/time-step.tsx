@@ -157,7 +157,7 @@ export function TimeStep({ onSelect, onBack }: TimeStepProps) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-center text-2xl">
-              nch nch nch
+              نه
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center text-base">
               دیگه حداقل 16:00 انتخاب کن

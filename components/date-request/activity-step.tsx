@@ -13,15 +13,15 @@ interface ActivityStepProps {
 }
 
 const activities = [
-  { value: "restaurant", label: "رستوران", icon: "🍽️", description: "پاستا؟ پیتزا؟ چی؟" },
-  { value: "cafe", label: "کافه", icon: "☕", description: "نولان / بنیز مسخرشون کنیم" },
-  { value: "park", label: "فضای باز", icon: "🌳", description: "بام ولنجک " },
-  { value: "museum", label: "گالری", icon: "🎨", description: "گالری اعتماد/سیحون " },
-  { value: "shopping", label: "موزه گربه", icon:"🐱", description: "MEOWWW" },
-  { value: "movie", label: "سینما", icon: "🎬", description: "سینما ماشین" },
-  { value: "bowling", label: "بیلیارد", icon: "🎱", description: "بام ولنجک" },
+  { value: "restaurant", label: "رستوران", icon: "🍽️", description:  ""},
+  { value: "cafe", label: "کافه", icon: "☕", description: "" },
+  { value: "park", label: "فضای باز", icon: "🌳", description: ""},
+  { value: "museum", label: "گالری", icon: "🎨", description: ""},
+  { value: "shopping", label: "موزه گربه", icon:"🐱", description: "" },
+  { value: "movie", label: "سینما", icon: "🎬", description: "" },
+  { value: "bowling", label: "بیلیارد", icon: "🎱", description: ""},
   // { value: "arcade", label: "گیم نت", icon: "🎮", description: "بازی و هیجان" },
-  { value: "surprise", label: "سورپرایز!", icon: "🎁", description: "هر چی تو بخوای" },
+  { value: "surprise", label: "سورپرایز!", icon: "🎁", description: "" },
 ]
 
 export function ActivityStep({ onSelect, onBack }: ActivityStepProps) {

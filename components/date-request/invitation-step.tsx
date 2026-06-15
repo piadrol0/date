@@ -36,12 +36,14 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     s9p4: "Roya",
     n3x8: "Mania",
     p5v6: "Parmida",
+    p1f1: "Paniz",
   }
   const peopleImages: Record<string, string> = {
     h7k2: "/screen.png",
     s9p4: "/screen3.png",
     n3x8: "/screen2.png",
     p5v6: "parmidascreen.png",
+    p1f1: "panizscreen.png",
   }
   // const personName = people[id || ""] || "Unknown"
   // useEffect(() => {
@@ -114,7 +116,8 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       h7k2: "/helia.jpg",
       s9p4: "/icon-dark-32x32.png",
       n3x8: "/icon-dark-32x32.png",
-      p5v6: "/parmida.jpeg"
+      p5v6: "/parmida.jpeg",
+      p1f1: "/paniz.jpeg",
 
     }
 
@@ -313,7 +316,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
           </div>
         </div>
       )}
-      {showIntro && (
+      {/* {showIntro && (
         <div className="absolute inset-0 z-50 flex flex-col gap-5 items-center justify-center bg-black/90 text-white text-2xl font-bold">
           تب مرورگرو چک کردی؟ 👀
           <Image
@@ -324,7 +327,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
             className="rounded-xl object-cover"
           />
         </div>
-      )}
+      )} */}
     </div>
   )
 }

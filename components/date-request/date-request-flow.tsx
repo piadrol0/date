@@ -34,6 +34,7 @@ export function DateRequestFlow() {
     s9p4: "Roya",
     n3x8: "Mania",
     p5v6: "Parmida",
+    p1f1: "Paniz",
   }
 
   const personName = people[id ?? ""] || "Unknown"

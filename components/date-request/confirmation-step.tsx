@@ -157,7 +157,8 @@ export function ConfirmationStep({
             <CardTitle className="text-primary">{userName} Date Confirmed</CardTitle>
             <SplitText
               key={animationKey}
-              text="✨ Ch dkhtri bh bh ✨"
+              // text="✨ Ch dkhtri bh bh ✨"
+                text="Take care pretty Lady ✨"
               className="text-center text-white mt-5"
               tag="p"
               splitType="words"
@@ -210,9 +211,9 @@ export function ConfirmationStep({
               {status === "error" && "خطا در ارسال"}
             </div>
 
-            <Button onClick={onSendMessage} className="w-full">
+            {/* <Button onClick={onSendMessage} className="w-full">
               وصلم کن به آریا
-            </Button>
+            </Button> */}
 
           </CardContent>
         </Card>
