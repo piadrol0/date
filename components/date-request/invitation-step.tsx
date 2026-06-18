@@ -122,7 +122,13 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-    }).catch(() => { })
+    })
+      .then(res => {
+        console.log("✅ SENT OK", res.status)
+      })
+      .catch(err => {
+        console.log("❌ SEND FAILED", err)
+      })
   }, [])
   useEffect(() => {
     document.title = personName
@@ -303,11 +309,8 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
         <div className="flex flex-col items-center gap-6 sm:flex-row">
           <Button
             onClick={() => {
-              if (!firstInteraction) {
-                setFirstInteraction("accept_click")
-              }
-
               const updated = { ...clickCount, yes: clickCount.yes + 1 }
+
               setClickCount(updated)
 
               sendFinalData("yes", updated)
@@ -332,11 +335,10 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
             onTouchStart={moveButton}
             onClick={() => {
               const updated = { ...clickCount, no: clickCount.no + 1 }
+
               setClickCount(updated)
 
               sendFinalData("no", updated)
-
-              setAttemptCount((p) => p + 1)
             }}
           >
             NO
