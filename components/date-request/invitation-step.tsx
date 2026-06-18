@@ -23,14 +23,43 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const noButtonRef = useRef<HTMLButtonElement>(null)
   const searchParams = useSearchParams()
-  const [entryTime] = useState(Date.now())
+  const startTime = useRef(Date.now()).current
   const [clickCount, setClickCount] = useState({
     yes: 0,
     no: 0,
   })
   const [firstInteraction, setFirstInteraction] = useState<string | null>(null)
   const id = searchParams.get("id")
+  const sendFinalData = (type: "yes" | "no", updatedClickCount?: { yes: number; no: number }) => {
+    const now = Date.now()
 
+    const payload = {
+      event: type === "yes" ? "accept_click" : "reject_click",
+      personName,
+      id,
+
+      entry_time: startTime,
+      decision_time: now,
+      time_on_page: now - startTime,
+      time_to_decision: now - startTime,
+
+      click_count: updatedClickCount ?? clickCount,
+      first_interaction: firstInteraction,
+
+      hoverCount,
+      attemptCount,
+
+      page: window.location.href,
+    }
+
+    console.log("📤 FINAL PAYLOAD:", payload)
+
+    fetch("/api/submit-form", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+  }
   const people: Record<string, string> = {
     h7k2: "Helia",
     s9p4: "Roya",
@@ -55,12 +84,11 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
 
   const device = isMobile ? "Mobile" : "Desktop"
-  const entryTimeISO = new Date(entryTime).toISOString()
   const [timeOnPage, setTimeOnPage] = useState(0)
   const hasSentRef = useRef(false)
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeOnPage(Date.now() - entryTime)
+      setTimeOnPage(Date.now() - startTime)
     }, 1000)
 
     return () => clearInterval(interval)
@@ -83,14 +111,14 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
         mobile: /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent),
       },
 
-      entry_time: new Date(entryTime).toISOString(),
+      entry_time: startTime,
       time_on_page: 0,
       click_count: clickCount,
       first_interaction: firstInteraction,
       page: window.location.href,
     }
 
-    fetch("https://piadrol2356.app.n8n.cloud/webhook/submit-form", {
+    fetch("/api/submit-form", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -279,7 +307,11 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
                 setFirstInteraction("accept_click")
               }
 
-              setClickCount((p) => ({ ...p, yes: p.yes + 1 }))
+              const updated = { ...clickCount, yes: clickCount.yes + 1 }
+              setClickCount(updated)
+
+              sendFinalData("yes", updated)
+
               onAccept()
             }}
             size="lg"
@@ -299,8 +331,12 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
             onMouseEnter={moveButton}
             onTouchStart={moveButton}
             onClick={() => {
-              setClickCount((p) => ({ ...p, no: p.no + 1 }))
-              setAttemptCount((prev) => prev + 1)
+              const updated = { ...clickCount, no: clickCount.no + 1 }
+              setClickCount(updated)
+
+              sendFinalData("no", updated)
+
+              setAttemptCount((p) => p + 1)
             }}
           >
             NO
