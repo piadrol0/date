@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { Calendar, Clock, Sparkles, PartyPopper } from "lucide-react"
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Grainient from "@/components/Grainient"
@@ -11,6 +10,8 @@ import GlareHover from "@/components/GlareHoverProps"
 import { gregorianToJalali } from "@/lib/utils"
 import BorderGlow from "../BorderGlow"
 import SplitText from "@/components/SplitText"
+import { getScene, SurpriseScene } from "@/lib/surprise"
+import Image from "next/image"
 interface DateDetails {
   date: Date
   time: string
@@ -59,7 +60,8 @@ export function ConfirmationStep({
 
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
   const [animationKey, setAnimationKey] = useState(0)
-
+  const [scene, setScene] = useState<SurpriseScene | null>(null)
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
   const formatDate = (date: Date) => {
     const [jy, jm, jd] = gregorianToJalali(
       date.getFullYear(),
@@ -73,6 +75,28 @@ export function ConfirmationStep({
     label: "As You Wish",
     icon: ""
   }
+  useEffect(() => {
+    if (!details.activity) return
+
+    const s = getScene(details.activity)
+    setScene(s)
+
+    const a = new Audio(s.music)
+    a.loop = true
+    a.volume = 0.6
+
+    setAudio(a)
+
+    // autoplay (browser اجازه بده)
+    a.play().catch(() => {
+      console.log("autoplay blocked")
+    })
+
+    return () => {
+      a.pause()
+      a.src = ""
+    }
+  }, [details.activity])
   const onSendMessage = () => {
 
     const telegramUrl = `https://t.me/piadrol`
@@ -214,6 +238,36 @@ export function ConfirmationStep({
             <Button onClick={onSendMessage} className="w-full">
               ?Berim Tel
             </Button>
+            {scene && audio && (
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 flex items-center gap-4">
+
+                {/* cover */}
+                <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center">
+                  <Image src={"/raaz1.jpg"} className="rounded-lg" alt="cover" width={1000}
+                    height={500} />
+                </div>
+
+                {/* info */}
+                <div className="flex-1">
+                  <p className="text-white text-sm font-medium">
+                    {scene.mood}
+                  </p>
+
+                  <p className="text-xs text-white/60">
+                    now playing
+                  </p>
+                </div>
+
+                {/* play button */}
+                <button
+                  onClick={() => audio.play()}
+                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition"
+                >
+                  ▶
+                </button>
+
+              </div>
+            )}
 
           </CardContent>
         </Card>
