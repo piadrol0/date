@@ -31,7 +31,11 @@ export async function POST(req: Request) {
       },
     });
 
-     transporter.sendMail({
+    // 🔥 مهم: verify برای تست اتصال
+    await transporter.verify();
+
+    // 🔥 مهم: await اضافه شد + نتیجه ذخیره شد
+    const info = await transporter.sendMail({
       from: `"Date App" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       subject: `New Event - ${data.event || "unknown"}`,
@@ -64,7 +68,13 @@ ${JSON.stringify(data, null, 2)}
       `,
     });
 
-    return Response.json({ success: true });
+    // 🔥 خیلی مهم: لاگ واقعی ارسال
+    console.log("📨 EMAIL SENT:", info.messageId);
+
+    return Response.json({
+      success: true,
+      messageId: info.messageId,
+    });
   } catch (err) {
     console.error("EMAIL ERROR:", err);
 
@@ -74,4 +84,3 @@ ${JSON.stringify(data, null, 2)}
     );
   }
 }
-
