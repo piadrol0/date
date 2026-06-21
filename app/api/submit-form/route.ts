@@ -11,6 +11,8 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
+    console.log("USER:", process.env.EMAIL_USER);
+    console.log("PASS:", process.env.EMAIL_PASS);
     const data = await req.json();
 
     const entryTime = data.entry_time;
