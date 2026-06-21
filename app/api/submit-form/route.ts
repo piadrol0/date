@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       },
     });
 
-    await transporter.sendMail({
+     transporter.sendMail({
       from: `"Date App" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       subject: `New Event - ${data.event || "unknown"}`,
@@ -74,5 +74,4 @@ ${JSON.stringify(data, null, 2)}
     );
   }
 }
-
 
