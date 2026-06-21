@@ -12,8 +12,6 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    console.log("RAW DATA:", data);
-    console.log("📦 DATA:", data);
 
     const entryTime = data.entry_time;
     const decisionTime = data.decision_time;
@@ -24,14 +22,16 @@ export async function POST(req: Request) {
         : null;
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
     });
 
-     transporter.sendMail({
+    await transporter.sendMail({
       from: `"Date App" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       subject: `New Event - ${data.event || "unknown"}`,
@@ -44,17 +44,17 @@ export async function POST(req: Request) {
 
         <p><b>Entry Time:</b> ${entryTime ? formatDate(entryTime) : "-"}</p>
 
-<p><b>Time to decision:</b> ${
-        timeToDecision ? Math.round(timeToDecision / 1000) : "-"
-      }s</p>
+        <p><b>Time to decision:</b> ${
+          timeToDecision ? Math.round(timeToDecision / 1000) : "-"
+        }s</p>
 
         <p><b>Total engagement:</b> ${
           data.time_on_page ? Math.round(data.time_on_page / 1000) : "-"
         }s</p>
 
-        <p><b>Attempts:</b> YES: ${
-          data.click_count?.yes ?? 0
-        } / NO: ${data.click_count?.no ?? 0}</p>
+        <p><b>Attempts:</b> YES: ${data.click_count?.yes ?? 0} / NO: ${
+          data.click_count?.no ?? 0
+        }</p>
 
         <hr />
 
@@ -74,3 +74,5 @@ ${JSON.stringify(data, null, 2)}
     );
   }
 }
+
+
