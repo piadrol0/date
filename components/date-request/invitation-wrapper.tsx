@@ -21,8 +21,7 @@ export default function InvitationWrapper() {
 
             {showIntro && (
                 <div className="fixed flex-col gap-5 inset-0 z-50 flex items-center justify-center bg-black text-white text-2xl font-bold pointer-events-none ">
-                    تب مرورگرو چک کردی؟ 👀
-                    <Image src="/screen.png" alt="tab info" width={250} height={250} />
+                   
                 </div>
             )}
         </>

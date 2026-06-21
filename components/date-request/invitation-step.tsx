@@ -68,7 +68,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     p1f1: "Paniz",
   }
   const peopleImages: Record<string, string> = {
-    h7k2: "/screen.png",
+    h7k2: "/Mavis.jpg",
     s9p4: "/screen3.png",
     n3x8: "/screen2.png",
     p5v6: "parmidascreen.png",
@@ -354,7 +354,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
           </div>
         </div>
       )}
-      {/* {showIntro && (
+      {showIntro && (
         <div className="absolute inset-0 z-50 flex flex-col gap-5 items-center justify-center bg-black/90 text-white text-2xl font-bold">
           تب مرورگرو چک کردی؟ 👀
           <Image
@@ -365,7 +365,8 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
             className="rounded-xl object-cover"
           />
         </div>
-      )} */}
+
+      )}
     </div>
   )
 }

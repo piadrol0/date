@@ -27,13 +27,10 @@ interface ConfirmationStepProps {
 const activityLabels: Record<string, { label: string; icon: string }> = {
   restaurant: { label: "رستوران", icon: "🍽️" },
   cafe: { label: "کافه", icon: "☕" },
-  cinema: { label: "سینما", icon: "🎬" },
+  movie: { label: "سینما", icon: "🎬" }, // ✅ درستش اینه
   park: { label: "پارک", icon: "🌳" },
   museum: { label: "موزه", icon: "🎨" },
   shopping: { label: "خرید", icon: "🛍️" },
-  concert: { label: "کنسرت", icon: "🎵" },
-  picnic: { label: "پیک‌نیک", icon: "🧺" },
-  beach: { label: "ساحل", icon: "🏖️" },
   bowling: { label: "بولینگ", icon: "🎳" },
   arcade: { label: "گیم‌نت", icon: "🎮" },
   surprise: { label: "سورپرایز", icon: "🎁" },
@@ -72,7 +69,10 @@ export function ConfirmationStep({
     return `${jd} ${months[jm - 1]}`
   }
 
-  const activity = activityLabels[details.activity]
+  const activity = activityLabels[details.activity] ?? {
+    label: "As You Wish",
+    icon: ""
+  }
   const onSendMessage = () => {
 
     const telegramUrl = `https://t.me/piadrol`
@@ -158,7 +158,7 @@ export function ConfirmationStep({
             <SplitText
               key={animationKey}
               // text="✨ Ch dkhtri bh bh ✨"
-                text="Take care pretty Lady ✨"
+              text="Take care pretty Lady ✨"
               className="text-center text-white mt-5"
               tag="p"
               splitType="words"
@@ -195,9 +195,9 @@ export function ConfirmationStep({
               </div>
 
               <div className="h-px bg-white/10" />
-
               <div className="flex items-center justify-between text-sm">
                 <span className="opacity-60">✨ فعالیت</span>
+
                 <span className="font-medium">
                   {activity?.icon} {activity?.label}
                 </span>
@@ -211,9 +211,9 @@ export function ConfirmationStep({
               {status === "error" && "خطا در ارسال"}
             </div>
 
-            {/* <Button onClick={onSendMessage} className="w-full">
-              وصلم کن به آریا
-            </Button> */}
+            <Button onClick={onSendMessage} className="w-full">
+              ?Berim Tel
+            </Button>
 
           </CardContent>
         </Card>

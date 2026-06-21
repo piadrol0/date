@@ -47,22 +47,18 @@ export function CalendarStep({ onSelect }: CalendarStepProps) {
   const [currentJy, setCurrentJy] = useState(todayJy)
   const [currentJm, setCurrentJm] = useState(todayJm)
 
-  // ✅ only today → 19 allowed
+  // ✅ only today 
   const isDateSelectable = (date: Date) => {
-    const [jy, jm, jd] = gregorianToJalali(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
+    const today = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "Asia/Tehran" })
     )
+    today.setHours(0, 0, 0, 0)
 
-    return (
-      jy === todayJy &&
-      jm === todayJm &&
-      jd >= todayJd &&
-      jd <= 30
-    )
+    const maxDate = new Date(today)
+    maxDate.setDate(today.getDate() + 7)
+
+    return date >= today && date <= maxDate
   }
-
   // ✅ month length
   const getMonthLength = (m: number) =>
     m <= 6 ? 31 : m <= 11 ? 30 : 29
@@ -247,7 +243,7 @@ export function CalendarStep({ onSelect }: CalendarStepProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>خیلی دیره ⏰</AlertDialogTitle>
             <AlertDialogDescription>
-              فقط تا ۱۹ خرداد قابل انتخابه
+              فقط از امروز تا ۷ روز آینده قابل انتخابه
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogAction className="w-full">

@@ -20,26 +20,39 @@ interface TimeStepProps {
   onBack: () => void
 }
 
-const timeSlots = [
-  { value: "10:00", label: "۱۰:۰۰ صبح" },
-  { value: "12:00", label: "۱۲:۰۰ ظهر" },
-  { value: "14:00", label: "۱۴:۰۰ بعدازظهر" },
-  { value: "16:00", label: "۱۶:۰۰ عصر" },
-  { value: "18:00", label: "۱۸:۰۰ غروب" },
-  { value: "20:00", label: "۲۰:۰۰ شب" },
-  { value: "21:00", label: "۲۱:۰۰ شب" },
-  { value: "22:00", label: "۲۲:۰۰ شب" },
+const timeGroups = [
+  {
+    label: "صبح ☀️",
+    slots: ["10:00", "12:00"],
+  },
+  {
+    label: "بعدازظهر 🌤",
+    slots: ["14:00", "16:00"],
+  },
+  {
+    label: "شب 🌙",
+    slots: ["18:00", "20:00", "21:00", "22:00"],
+  },
 ]
 
-export function TimeStep({ onSelect, onBack }: TimeStepProps) {
+const getSuggestedTime = () => {
+  const hour = new Date().getHours()
+
+  if (hour < 12) return "14:00"
+  if (hour < 16) return "18:00"
+  return "16:00"
+}
+
+export function TimeStep({ onSelect }: TimeStepProps) {
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [showTooLateDialog, setShowTooLateDialog] = useState(false)
-  const [isGradientLoaded, setIsGradientLoaded] = useState(false)
+
+  const suggestedTime = getSuggestedTime()
 
   const handleTimeSelect = (timeValue: string) => {
     const hour = parseInt(timeValue.split(":")[0])
 
-    if (hour >= 18) {
+    if (hour >= 23) {
       setShowTooLateDialog(true)
       return
     }
@@ -47,120 +60,88 @@ export function TimeStep({ onSelect, onBack }: TimeStepProps) {
     setSelectedTime(timeValue)
   }
 
-  const handleConfirm = () => {
-    if (selectedTime) {
-      onSelect(selectedTime)
-    }
-  }
-
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-8">
+
+      {/* Background */}
       <div className="absolute inset-0 z-0">
-        <Grainient
-          className="w-full h-full"
-           color1="#5d2eb9"
-          color2="#ff2757"
-          color3="#c41a7d"
-          timeSpeed={0.25}
-          colorBalance={-0.13}
-          warpStrength={1}
-          warpFrequency={10.5}
-          warpSpeed={2}
-          warpAmplitude={50}
-          blendAngle={0}
-          blendSoftness={0.65}
-          rotationAmount={460}
-          noiseScale={2}
-          grainAmount={0.1}
-          grainScale={2}
-          grainAnimated={false}
-          contrast={1.5}
-          gamma={1}
-          saturation={1}
-          centerX={0}
-          centerY={0}
-          zoom={0.9}
-          onLoad={() => setIsGradientLoaded(true)}
-        />
+        <Grainient className="w-full h-full" />
       </div>
+
       <div className="absolute inset-0 z-10 pointer-events-none">
-        <SideRays
-          speed={2.5}
-          rayColor1="#EAB308"
-          rayColor2="#ffb900"
-          intensity={2.4}
-          spread={2}
-          origin="top-right"
-          tilt={10}
-          saturation={1.4}
-          blend={0.75}
-          falloff={1.8}
-          opacity={0.9}
-        />
+        <SideRays />
       </div>
-      <Card className="relative z-20 w-full max-w-md border-border bg-card shadow-xl">
+
+      <Card className="relative z-20 w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Clock className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl text-card-foreground">
-            چه ساعتی بیام دنبالت؟
-          </CardTitle>
+          <CardTitle>چه ساعتی بیام دنبالت؟</CardTitle>
+
+          {/* Suggestion */}
+          <p className="text-sm text-muted-foreground mt-2">
+            پیشنهاد ما: <span className="font-semibold text-primary">{suggestedTime}</span>
+          </p>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-3">
-            {timeSlots.map((slot) => (
-              <button
-                key={slot.value}
-                onClick={() => handleTimeSelect(slot.value)}
-                className={`
-                  flex items-center justify-center gap-2 rounded-[12px] border-2 p-4 text-center transition-all
-                  ${selectedTime === slot.value
-                    ? "border-primary bg-primary/10 shadow-md"
-                    : "border-border hover:border-primary/50 hover:bg-secondary"
-                  }
-                `}
-              >
 
-                <span className="font-medium text-card-foreground">
-                  {slot.label}
-                </span>
-              </button>
-            ))}
-          </div>
+        <CardContent className="space-y-6">
 
-          {/* Actions */}
-          <div className="flex gap-3 pt-4">
+          {timeGroups.map((group) => (
+            <div key={group.label} className="space-y-2">
 
-            <Button
-              onClick={handleConfirm}
-              disabled={!selectedTime}
-              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              تأیید ساعت
-            </Button>
-          </div>
+              <p className="text-sm text-muted-foreground">
+                {group.label}
+              </p>
+
+              <div className="grid grid-cols-2 gap-2">
+                {group.slots.map((slot) => (
+                  <button
+                    key={slot}
+                    onClick={() => handleTimeSelect(slot)}
+                    className={`
+                      relative rounded-xl border-2 p-3 text-center transition-all
+                      ${selectedTime === slot
+                        ? "border-primary bg-primary/10"
+                        : "border-border hover:border-primary/50 hover:bg-secondary"
+                      }
+                      ${suggestedTime === slot && !selectedTime
+                        ? "border-yellow-400 bg-yellow-400/10"
+                        : ""
+                      }
+                    `}
+                  >
+                    {slot}
+
+                    {suggestedTime === slot && (
+                      <span className="absolute -top-2 -right-2 text-[10px] bg-yellow-400 text-black px-2 py-[2px] rounded-full">
+                        پیشنهادی
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <Button
+            onClick={() => selectedTime && onSelect(selectedTime)}
+            disabled={!selectedTime}
+            className="w-full"
+          >
+            تأیید ساعت
+          </Button>
+
         </CardContent>
       </Card>
 
-      {!isGradientLoaded && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-black/70 text-white">
-          <div className="h-10 w-10 animate-spin rounded-full border-4 border-white/30 border-t-white" />
-          <div className="text-center text-lg font-medium">
-            کمی صبر کن تا صفحه آماده بشه
-          </div>
-        </div>
-      )}
-
-      {/* Too Late Dialog */}
+      {/* Dialog */}
       <AlertDialog open={showTooLateDialog} onOpenChange={setShowTooLateDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-center text-2xl">
-              نه
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-base">
-              دیگه حداقل 16:00 انتخاب کن
+            <AlertDialogTitle>یه کم دیر شد 😏</AlertDialogTitle>
+            <AlertDialogDescription>
+              بهتره یه ساعت زودتر انتخاب کنی
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogAction className="w-full">
@@ -168,6 +149,7 @@ export function TimeStep({ onSelect, onBack }: TimeStepProps) {
           </AlertDialogAction>
         </AlertDialogContent>
       </AlertDialog>
+
     </div>
   )
 }
