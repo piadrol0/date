@@ -7,14 +7,23 @@ import { Spinner } from "@/components/ui/spinner"
 import Grainient from "@/components/Grainient"
 import SplitText from "@/components/SplitText"
 import SideRays from "../SideRays"
+import emailjs from "@emailjs/browser"
 import { useSearchParams } from "next/navigation"
 import Image from "next/image"
 interface InvitationStepProps {
   onAccept: () => void
   onReject: () => void
+  date: string
+  time: string
+  activity: string
+  anythingElse: string
 }
 
-export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
+export function InvitationStep({ onAccept, onReject,
+  date,
+  time,
+  activity,
+  anythingElse, }: InvitationStepProps) {
   const [noButtonPosition, setNoButtonPosition] = useState({ x: 0, y: 0 })
   const [hoverCount, setHoverCount] = useState(0)
   const [attemptCount, setAttemptCount] = useState(0)
@@ -23,13 +32,54 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const noButtonRef = useRef<HTMLButtonElement>(null)
   const searchParams = useSearchParams()
-  const startTime = useRef(Date.now()).current
+  const startTime = useRef<number>(0)
+
+  useEffect(() => {
+    startTime.current = Date.now()
+  }, [])
   const [clickCount, setClickCount] = useState({
     yes: 0,
     no: 0,
   })
   const [firstInteraction, setFirstInteraction] = useState<string | null>(null)
   const id = searchParams.get("id")
+
+  const sendEmail = async (payload: any) => {
+    try {
+      await emailjs.send(
+        "service_mln5ozs",
+        "template_d2060zs",
+        {
+          event: payload.event,
+          personName: payload.personName,
+          id: payload.id,
+
+          date: payload.date,
+          time: payload.time,
+          activity: payload.activity,
+          anythingElse: payload.anythingElse,
+
+          page: payload.page,
+          time_on_page: payload.time_on_page,
+          decision_time: payload.decision_time,
+
+          click_count: JSON.stringify(payload.click_count),
+          first_interaction: payload.first_interaction,
+          hoverCount: payload.hoverCount,
+          attemptCount: payload.attemptCount,
+
+          device: JSON.stringify(payload.device),
+        },
+        {
+          publicKey: "eI8XC4_hCdTBm5ivO"
+        }
+      )
+
+      console.log("Email sent")
+    } catch (err) {
+      console.error(err)
+    }
+  }
   const sendFinalData = (type: "yes" | "no", updatedClickCount?: { yes: number; no: number }) => {
     const now = Date.now()
 
@@ -38,10 +88,14 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
       personName,
       id,
 
-      entry_time: startTime,
+      date,
+      time,
+      activity,
+      anythingElse,
+
+      entry_time: startTime.current,
       decision_time: now,
-      time_on_page: now - startTime,
-      time_to_decision: now - startTime,
+      time_on_page: now - startTime.current,
 
       click_count: updatedClickCount ?? clickCount,
       first_interaction: firstInteraction,
@@ -54,11 +108,7 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
 
     console.log("📤 FINAL PAYLOAD:", payload)
 
-    fetch("/api/submit-form", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
+    sendEmail(payload)
   }
   const people: Record<string, string> = {
     h7k2: "Helia",
@@ -80,15 +130,30 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
   // }, [personName])
   const personName = people[id || ""] || "Unknown"
   const personImage = peopleImages[id || ""] || "/default.jpg"
-  const isMobile =
-    /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)
+  const [isMobile, setIsMobile] = useState(false)
 
+  useEffect(() => {
+    setIsMobile(/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent))
+  }, [])
+  const [hearts, setHearts] = useState<any[]>([])
+
+  useEffect(() => {
+    setHearts(
+      Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        delay: `${Math.random() * 2}s`,
+        scale: 0.5 + Math.random() * 1.5,
+      }))
+    )
+  }, [])
   const device = isMobile ? "Mobile" : "Desktop"
   const [timeOnPage, setTimeOnPage] = useState(0)
   const hasSentRef = useRef(false)
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeOnPage(Date.now() - startTime)
+      setTimeOnPage(Date.now() - startTime.current)
     }, 1000)
 
     return () => clearInterval(interval)
@@ -111,24 +176,14 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
         mobile: /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent),
       },
 
-      entry_time: startTime,
+      entry_time: startTime.current,
       time_on_page: 0,
       click_count: clickCount,
       first_interaction: firstInteraction,
       page: window.location.href,
     }
 
-    fetch("/api/submit-form", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
-      .then(res => {
-        console.log("✅ SENT OK", res.status)
-      })
-      .catch(err => {
-        console.log("❌ SEND FAILED", err)
-      })
+    sendEmail(payload)
   }, [])
   useEffect(() => {
     document.title = personName
@@ -171,17 +226,17 @@ export function InvitationStep({ onAccept, onReject }: InvitationStepProps) {
     "وااااااااااا"
   ]
 
-  const hearts = useMemo(
-    () =>
-      Array.from({ length: 20 }, (_, i) => ({
-        id: i,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        delay: `${Math.random() * 2}s`,
-        scale: 0.5 + Math.random() * 1.5,
-      })),
-    []
-  )
+  // const hearts = useMemo(
+  //   () =>
+  //     Array.from({ length: 20 }, (_, i) => ({
+  //       id: i,
+  //       left: `${Math.random() * 100}%`,
+  //       top: `${Math.random() * 100}%`,
+  //       delay: `${Math.random() * 2}s`,
+  //       scale: 0.5 + Math.random() * 1.5,
+  //     })),
+  //   []
+  // )
 
   const moveButton = useCallback(() => {
     if (!containerRef.current || !noButtonRef.current) return

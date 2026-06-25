@@ -1,21 +1,22 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Calendar, Clock, Sparkles, PartyPopper } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Grainient from "@/components/Grainient"
 import SideRays from "../SideRays"
-import GlareHover from "@/components/GlareHoverProps"
+import { useEffect, useRef } from "react"
+import emailjs from "@emailjs/browser"
 import { gregorianToJalali } from "@/lib/utils"
 import BorderGlow from "../BorderGlow"
 import SplitText from "@/components/SplitText"
 import { getScene, SurpriseScene } from "@/lib/surprise"
 import Image from "next/image"
 interface DateDetails {
-  date: Date
-  time: string
-  activity: string
+  date: Date | null
+  time: string | null
+  activity: string | null
   anythingElse: string
 }
 
@@ -58,16 +59,53 @@ export function ConfirmationStep({
   userName,
 }: ConfirmationStepProps) {
 
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle")
+  const [status, setStatus] =
+    useState<"idle" | "sending" | "success" | "error">("idle")
+
+  const sentRef = useRef(false)
+
+  useEffect(() => {
+    if (sentRef.current) return
+    sentRef.current = true
+
+    const send = async () => {
+      try {
+        setStatus("sending")
+
+        await await emailjs.send(
+          "service_mln5ozs",
+          "template_d2060zs",
+          {
+            userName,
+            date: details.date ? formatDate(details.date) : "",
+            time: details.time ?? "",
+            activity: details.activity ?? "",
+            anythingElse: details.anythingElse ?? "",
+          },
+          "eI8XC4_hCdTBm5ivO"
+        )
+
+        setStatus("success")
+      } catch (err) {
+        console.error(err)
+        setStatus("error")
+      }
+    }
+
+    send()
+  }, [])
   const [animationKey, setAnimationKey] = useState(0)
   const [scene, setScene] = useState<SurpriseScene | null>(null)
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | null) => {
+    if (!date) return ""
+
     const [jy, jm, jd] = gregorianToJalali(
       date.getFullYear(),
       date.getMonth(),
       date.getDate()
     )
+
     return `${jd} ${months[jm - 1]}`
   }
 
@@ -103,39 +141,7 @@ export function ConfirmationStep({
     window.open(telegramUrl, "_blank")
 
   }
-  useEffect(() => {
-    const send = async () => {
-      setStatus("sending")
 
-      try {
-        const res = await fetch("/api/submit-form", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userName,
-            date: formatDate(details.date),
-            time: details.time,
-            activity: details.activity,
-            anythingElse: details.anythingElse,
-          }),
-        })
-
-        const text = await res.text()
-
-        if (!res.ok) {
-          console.log("API ERROR:", text)
-          setStatus("error")
-          return
-        }
-
-        setStatus(res.ok ? "success" : "error")
-      } catch {
-        setStatus("error")
-      }
-    }
-
-    send()
-  }, [details, userName])
 
   return (
     <div className="relative flex min-h-screen items-center justify-center w-full px-4 py-8">
@@ -205,7 +211,7 @@ export function ConfirmationStep({
               <div className="flex items-center justify-between text-sm">
                 <span className="opacity-60">📅 تاریخ</span>
                 <span className="font-medium text-right">
-                  {formatDate(details.date)}
+                  {details.date ? formatDate(details.date) : ""}
                 </span>
               </div>
 
@@ -214,7 +220,7 @@ export function ConfirmationStep({
               <div className="flex items-center justify-between text-sm">
                 <span className="opacity-60">⏰ ساعت</span>
                 <span className="font-medium">
-                  {timeLabels[details.time]}
+                  {details.time ? timeLabels[details.time] : ""}
                 </span>
               </div>
 
@@ -223,7 +229,9 @@ export function ConfirmationStep({
                 <span className="opacity-60">✨ فعالیت</span>
 
                 <span className="font-medium">
-                  {activity?.icon} {activity?.label}
+                  {details.activity
+                    ? activityLabels[details.activity]?.label
+                    : ""}
                 </span>
               </div>
 
@@ -243,7 +251,7 @@ export function ConfirmationStep({
 
                 {/* cover */}
                 <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center">
-                  <Image src={"/raaz1.jpg"} className="rounded-lg" alt="cover" width={1000}
+                  <Image src={"/drake.jpg"} className="rounded-lg" alt="cover" width={1000}
                     height={500} />
                 </div>
 

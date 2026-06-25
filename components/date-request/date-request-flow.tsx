@@ -18,7 +18,7 @@ type Step =
   | "anythingElse"
   | "confirmation"
 
-interface DateDetails {
+type DateDetails = {
   date: Date | null
   time: string | null
   activity: string | null
@@ -60,8 +60,18 @@ export function DateRequestFlow() {
     setCurrentStep("activity")
   }
 
-  const handleSelectActivity = (activity: string) => {
-    setDateDetails((p) => ({ ...p, activity }))
+  const handleSelectActivity = (data: {
+    activity: string
+    date?: Date
+    time?: string
+    isSurprise?: boolean
+  }) => {
+    setDateDetails(prev => ({
+      ...prev,
+      activity: data.activity,
+      time: data.time ?? prev.time
+    }))
+
     setCurrentStep("anythingElse")
   }
 
@@ -96,7 +106,14 @@ export function DateRequestFlow() {
         </div>
       )}
       {currentStep === "invitation" && (
-        <InvitationStep onAccept={handleAcceptInvitation} onReject={() => { }} />
+        <InvitationStep
+          onAccept={handleAcceptInvitation}
+          onReject={() => { }}
+          date={dateDetails.date?.toString() ?? ""}
+          time={dateDetails.time ?? ""}
+          activity={dateDetails.activity ?? ""}
+          anythingElse={dateDetails.anythingElse}
+        />
       )}
 
       {currentStep === "calendar" && (
@@ -116,9 +133,7 @@ export function DateRequestFlow() {
       )}
 
       {currentStep === "confirmation" &&
-        dateDetails.date &&
-        dateDetails.time &&
-        dateDetails.activity && (
+        (
           <ConfirmationStep
             userName={personName}
             details={{
