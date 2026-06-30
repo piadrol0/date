@@ -410,7 +410,7 @@ export function InvitationStep({ onAccept, onReject,
           </div>
         </div>
       )}
-      {showIntro && (
+      {/* {showIntro && (
         <div className="absolute inset-0 z-50 flex flex-col gap-5 items-center justify-center bg-black/90 text-white text-2xl font-bold">
           تب مرورگرو چک کردی؟ 👀
           <Image
@@ -422,7 +422,7 @@ export function InvitationStep({ onAccept, onReject,
           />
         </div>
 
-      )}
+      )} */}
     </div>
   )
 }
