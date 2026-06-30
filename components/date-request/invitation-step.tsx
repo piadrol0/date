@@ -116,6 +116,7 @@ export function InvitationStep({ onAccept, onReject,
     n3x8: "Mania",
     p5v6: "Parmida",
     p1f1: "Paniz",
+    n2l1: "nilofar"
   }
   const peopleImages: Record<string, string> = {
     h7k2: "/Mavis.jpg",
@@ -123,6 +124,7 @@ export function InvitationStep({ onAccept, onReject,
     n3x8: "/screen2.png",
     p5v6: "parmidascreen.png",
     p1f1: "panizscreen.png",
+    // n2l1: ""
   }
   // const personName = people[id || ""] || "Unknown"
   // useEffect(() => {
@@ -207,7 +209,6 @@ export function InvitationStep({ onAccept, onReject,
       n3x8: "/icon-dark-32x32.png",
       p5v6: "/parmida.jpeg",
       p1f1: "/paniz.jpeg",
-
     }
 
     favicon.href = icons[id || ""] || "/favicon.ico"
