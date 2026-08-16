@@ -118,7 +118,8 @@ export function InvitationStep({ onAccept, onReject,
     p1f1: "Paniz",
     n2l1: "nazanin",
     m8m8:"Maya",
-    m3e2:"Maede"
+    m3e2:"Maede",
+    b1b2:"Melina"
   }
   const peopleImages: Record<string, string> = {
     h7k2: "/Mavis.jpg",
