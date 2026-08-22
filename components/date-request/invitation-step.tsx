@@ -110,16 +110,17 @@ export function InvitationStep({ onAccept, onReject,
 
     sendEmail(payload)
   }
-  const people: Record<string, string> = {         
+  const people: Record<string, string> = {
     h7k2: "Helia",
     s9p4: "Roya",
     n3x8: "Mania",
     p5v6: "Parmida",
     p1f1: "Paniz",
     n2l1: "nazanin",
-    m8m8:"Maya",
-    m3e2:"Maede",
-    b1b2:"Melina"
+    m8m8: "Maya",
+    m3e2: "Maede",
+    b1b2: "Melina",
+    emc2: "Mommy"
   }
   const peopleImages: Record<string, string> = {
     h7k2: "/Mavis.jpg",

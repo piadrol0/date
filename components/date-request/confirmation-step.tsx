@@ -243,9 +243,9 @@ export function ConfirmationStep({
               {status === "error" && "خطا در ارسال"}
             </div>
 
-            <Button onClick={onSendMessage} className="w-full">
+            {/* <Button onClick={onSendMessage} className="w-full">
               ?Berim Tel
-            </Button>
+            </Button> */}
             {scene && audio && (
               <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-4 flex items-center gap-4">
 
