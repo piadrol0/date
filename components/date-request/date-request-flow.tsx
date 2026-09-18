@@ -100,11 +100,7 @@ export function DateRequestFlow() {
   }, [])
   return (
     <main className="min-h-screen bg-background">
-      {showIntro && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 text-white text-2xl font-bold">
-          تب مرورگرو چک کردی؟ 👀
-        </div>
-      )}
+     
       {currentStep === "invitation" && (
         <InvitationStep
           onAccept={handleAcceptInvitation}
